@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Writing Tutor - Picture Book Recommendation</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .font-fredoka {
+            font-family: 'Fredoka', cursive, sans-serif;
+        }
+        .chat-bubble-user {
+            background-color: #4f46e5;
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+        .chat-bubble-tutor {
+            background-color: #ffffff;
+            color: #1f2937;
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+
+        /* Print formatting */
+        @media print {
+            body > *:not(#final-modal) {
+                display: none !important;
+            }
+            #final-modal {
+                position: absolute !important;
+                inset: 0 !important;
+                background: white !important;
+                padding: 0 !important;
+                display: block !important;
+            }
+            #final-modal > div {
+                border: none !important;
+                box-shadow: none !important;
+                max-width: 100% !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 h-screen flex flex-col overflow-hidden">
+
+    <header class="bg-indigo-600 text-white px-4 py-3 shadow-md flex justify-between items-center z-10 flex-shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="bg-yellow-400 text-indigo-900 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xl shadow">
+                <i class="fa-solid fa-pen-nib"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-lg leading-tight font-fredoka tracking-wide">English Writing Tutor</h1>
+                <p class="text-xs text-indigo-200">Picture Book Recommendation (Purpose To-Infinitive & Reflexive Pronoun)</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-3 text-sm">
+            <div id="student-badge" class="hidden bg-indigo-700 px-3 py-1.5 rounded-lg flex items-center space-x-2 border border-indigo-500">
+                <i class="fa-solid fa-user-graduate text-yellow-300"></i>
+                <span id="display-student-id" class="font-mono font-bold">10101</span>
+            </div>
+            <button id="reset-btn" class="hidden text-xs bg-indigo-500 hover:bg-indigo-400 text-white px-2.5 py-1.5 rounded-lg transition">
+                <i class="fa-solid fa-rotate-right mr-1"></i> Reset (처음으로)
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 flex overflow-hidden relative">
+
+        <!-- 1. LOGIN / STUDENT ID MODAL OVERLAY -->
+        <div id="login-modal" class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center transform transition-all border-4 border-indigo-100">
+                <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner">
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-1">Welcome! 👋</h2>
+                <p class="text-slate-600 text-xs mb-4">반갑습니다!<br>Let's write a book recommendation together!<br>(영어 그림책 추천사를 함께 작성해 봅시다!)<br>Please enter your <strong>5-digit Student ID</strong>. (학번 5자리 입력)</p>
+                
+                <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 mb-4 text-left text-xs text-indigo-900 space-y-1">
+                    <p class="font-bold text-indigo-700 flex items-center mb-1">
+                        <i class="fa-solid fa-check-double mr-1.5 text-indigo-600"></i>Required Guidelines (필수 작성 지침):
+                    </p>
+                    <p>1️⃣ <strong>To-Infinitive of Purpose (목적의 to부정사)</strong> - e.g., to help..., to learn...</p>
+                    <p>2️⃣ <strong>Reflexive Pronouns (재귀대명사)</strong> - e.g., himself, herself, myself...</p>
+                    <p>3️⃣ <strong>Sentence Length (문장 길이)</strong> - Must write at least <strong>7 words</strong> per sentence.</p>
+                    <p class="font-bold text-indigo-700 flex items-center mt-2 mb-1">
+                        <i class="fa-solid fa-list-check mr-1.5 text-indigo-600"></i>Recommendation Reasons Criteria (추천 이유 필수 요소):
+                    </p>
+                    <p class="text-[11px] text-slate-600">책 비교, 주제, 완성도, 삽화, 감동 중 <strong>최소 3가지 이상</strong>을 다루어야 합니다.</p>
+                </div>
+
+                <form id="login-form" class="space-y-3">
+                    <div class="text-left">
+                        <label for="student-id-input" class="block text-xs font-semibold text-slate-500 mb-1 ml-1">Example: Class 1, No. 1 ➡️ 10101 (학번 예시)</label>
+                        <input type="text" id="student-id-input" maxlength="5" pattern="[0-9]{5}" required placeholder="10101" 
+                               class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:outline-none font-mono text-center text-lg tracking-widest font-bold text-slate-700 bg-slate-50">
+                        <p id="login-error-msg" class="hidden text-xs text-red-500 font-semibold mt-1 ml-1 flex items-center">
+                            <i class="fa-solid fa-circle-exclamation mr-1"></i> 올바른 5자리 숫자 학번을 입력해 주세요!
+                        </p>
+                    </div>
+                    <button type="submit" id="start-writing-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg hover:shadow-xl transition transform active:scale-95 flex items-center justify-center space-x-2">
+                        <span>Start Writing (글쓰기 시작하기)</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 2. MAIN TUTOR APP LAYOUT -->
+        <div class="flex-1 flex flex-col md:flex-row w-full h-full overflow-hidden">
+
+            <!-- LEFT: Chat & Interaction Interface -->
+            <div class="flex-1 flex flex-col h-full bg-slate-50 border-r border-slate-200">
+                
+                <!-- Progress Bar / Stepper Header -->
+                <div class="bg-white border-b border-slate-200 p-3 px-4 shadow-sm flex-shrink-0">
+                    <div class="flex justify-between text-xs font-semibold text-slate-500 mb-1.5">
+                        <span id="step-indicator-text">Step 1: Book Title (추천 책 제목 소개)</span>
+                        <span id="step-percentage">12%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200">
+                        <div id="progress-bar-fill" class="bg-indigo-500 h-2.5 rounded-full transition-all duration-500" style="width: 12%"></div>
+                    </div>
+                    <!-- Step Badges -->
+                    <div class="flex justify-between items-center mt-2 text-[11px] font-medium text-slate-400">
+                        <span id="step-badge-1" class="text-indigo-600 font-bold flex items-center"><i class="fa-solid fa-circle-check mr-1"></i>1. Title (책 제목)</span>
+                        <span id="step-badge-2" class="flex items-center"><i class="fa-regular fa-circle mr-1"></i>2. Summary (줄거리)</span>
+                        <span id="step-badge-3" class="flex items-center"><i class="fa-regular fa-circle mr-1"></i>3. Comp & Overall (비교/총평)</span>
+                        <span id="step-badge-4" class="flex items-center"><i class="fa-regular fa-circle mr-1"></i>4. Reasons (주제/감동/삽화)</span>
+                    </div>
+                </div>
+
+                <!-- Chat History Window -->
+                <div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                    <!-- Chat messages dynamically rendered here -->
+                </div>
+
+                <!-- Floating Helper Toolbar / Hint Chips -->
+                <div id="hint-toolbar" class="bg-amber-50 border-t border-amber-200 px-4 py-2 flex items-center justify-between text-xs text-amber-800 flex-shrink-0">
+                    <div class="flex items-center space-x-2 overflow-x-auto custom-scrollbar py-1 w-full">
+                        <span class="font-bold whitespace-nowrap text-amber-900 flex items-center flex-shrink-0">
+                            <i class="fa-solid fa-lightbulb text-amber-500 mr-1.5"></i>Hints & Patterns (도움말/패턴):
+                        </span>
+                        <div id="hint-chips-container" class="flex space-x-1.5">
+                            <!-- Hint buttons injected dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message Input Form -->
+                <div class="bg-white p-3 border-t border-slate-200 shadow-lg flex-shrink-0">
+                    <form id="chat-form" class="flex space-x-2 items-center">
+                        <div class="relative flex-1">
+                            <input type="text" id="user-input" autocomplete="off" placeholder="Write sentence in English... (영어로 문장을 작성해 보세요)" 
+                                   class="w-full pl-4 pr-10 py-3 rounded-xl border border-slate-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm text-slate-800">
+                            <button type="button" id="speak-btn" title="Voice Input (음성 인식)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-indigo-600 transition">
+                                <i class="fa-solid fa-microphone text-base"></i>
+                            </button>
+                        </div>
+                        <button type="submit" id="send-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white p-3 px-5 rounded-xl font-bold transition flex items-center justify-center shadow-md active:scale-95">
+                            <i class="fa-solid fa-paper-plane text-sm"></i>
+                        </button>
+                    </form>
+                    <div class="flex justify-between items-center mt-1.5 px-1 text-[11px] text-slate-400">
+                        <span>💡 철자, 어법 및 내용 적절성을 종합적으로 검사하여 피드백합니다.</span>
+                        <span id="char-count">0 characters</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT: Real-time Writing Draft Preview & Final Report Notebook -->
+            <div class="w-full md:w-80 lg:w-96 bg-white flex flex-col border-l border-slate-200 shadow-sm h-full flex-shrink-0">
+                
+                <div class="bg-slate-50 border-b border-slate-200 p-3 px-4 flex justify-between items-center flex-shrink-0">
+                    <h3 class="font-bold text-slate-700 text-sm flex items-center">
+                        <i class="fa-solid fa-book-open text-indigo-500 mr-2"></i>My Writing Notebook (글쓰기 노트)
+                    </h3>
+                    <span id="notebook-status-badge" class="text-xs bg-indigo-100 text-indigo-700 font-semibold px-2 py-0.5 rounded-full">Writing...</span>
+                </div>
+
+                <!-- Notebook Live View Area -->
+                <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-4">
+                    
+                    <!-- Required Grammar Checklist Badge Panel -->
+                    <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3 shadow-xs">
+                        <div class="flex items-center justify-between text-xs font-bold text-amber-900 mb-1.5">
+                            <span><i class="fa-solid fa-spell-check text-amber-600 mr-1"></i>Grammar Checklist (필수 문법)</span>
+                            <span class="text-[10px] text-amber-700 font-normal">Must use both</span>
+                        </div>
+                        <div class="space-y-1 text-xs">
+                            <div id="check-to-infinitive" class="flex items-center text-slate-400 transition-all">
+                                <i class="fa-solid fa-circle-xmark mr-1.5 text-slate-300"></i>
+                                <span>Purpose To-Infinitive (<code class="bg-amber-100 text-amber-800 px-1 rounded text-[10px]">to + verb</code>)</span>
+                            </div>
+                            <div id="check-reflexive" class="flex items-center text-slate-400 transition-all">
+                                <i class="fa-solid fa-circle-xmark mr-1.5 text-slate-300"></i>
+                                <span>Reflexive Pronoun (<code class="bg-amber-100 text-amber-800 px-1 rounded text-[10px]">-self / -selves</code>)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommendation Criteria Tracker Badge -->
+                    <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-3 shadow-xs">
+                        <div class="flex items-center justify-between text-xs font-bold text-blue-900 mb-1.5">
+                            <span><i class="fa-solid fa-layer-group text-blue-600 mr-1"></i>Reasons Criteria (추천 요소)</span>
+                            <span class="text-[10px] text-blue-700 font-normal">Min 3 Aspects</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px]">
+                            <span id="badge-criteria-comp" class="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center">비교/총평</span>
+                            <span id="badge-criteria-theme" class="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center">주제/메시지</span>
+                            <span id="badge-criteria-art" class="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center">삽화/그림</span>
+                            <span id="badge-criteria-emotion" class="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center">감동/완성도</span>
+                        </div>
+                    </div>
+
+                    <!-- Section 1: Book Title -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-xs transition-all">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-500 mb-1 border-b border-slate-200 pb-1">
+                            <span><i class="fa-solid fa-bookmark text-indigo-400 mr-1"></i>Book Title (추천 책 제목)</span>
+                            <i id="check-title" class="fa-solid fa-circle-check text-slate-300"></i>
+                        </div>
+                        <p id="draft-title" class="text-xs text-slate-400 italic">Not written yet. (아직 작성되지 않음)</p>
+                    </div>
+
+                    <!-- Section 2: Main Story Summary -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-xs transition-all">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-500 mb-1 border-b border-slate-200 pb-1">
+                            <span><i class="fa-solid fa-align-left text-indigo-400 mr-1"></i>Summary (중심내용 소개 - 3문장)</span>
+                            <i id="check-summary" class="fa-solid fa-circle-check text-slate-300"></i>
+                        </div>
+                        <div id="draft-summary-container" class="space-y-1.5 text-xs text-slate-400 italic">
+                            <p id="draft-q1-setting" class="leading-relaxed">• Sentence 1: Character & Setting</p>
+                            <p id="draft-q2-action" class="leading-relaxed">• Sentence 2: Main Event</p>
+                            <p id="draft-q3-resolution" class="leading-relaxed">• Sentence 3: Resolution</p>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Recommendation Reasons -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-xs transition-all">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-500 mb-1 border-b border-slate-200 pb-1">
+                            <span><i class="fa-solid fa-star text-indigo-400 mr-1"></i>Recommendation Reasons (추천 이유 문단)</span>
+                            <i id="check-reasons" class="fa-solid fa-circle-check text-slate-300"></i>
+                        </div>
+                        <div id="draft-reasons-container" class="space-y-1.5 text-xs text-slate-400 italic">
+                            <p id="draft-rec-q1" class="leading-relaxed">• 1) Overall Evaluation (비교 및 전체 총평)</p>
+                            <p id="draft-rec-q2-1" class="leading-relaxed">• 2) Reason 1 (주제/감동/삽화/완성도 중 1)</p>
+                            <p id="draft-rec-q2-2" class="leading-relaxed">• 3) Reason 2 (주제/감동/삽화/완성도 중 2)</p>
+                            <p id="draft-rec-q2-3" class="leading-relaxed">• 4) Reason 3 (주제/감동/삽화/완성도 중 3)</p>
+                        </div>
+                    </div>
+
+                    <!-- Complete Action Button -->
+                    <button id="view-final-report-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl shadow transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-file-contract"></i>
+                        <span>View Final Report (최종 보고서)</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 3. FINAL REPORT MODAL OVERLAY -->
+    <div id="final-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col border border-slate-200 overflow-hidden">
+            
+            <div class="bg-indigo-600 text-white p-4 px-6 flex justify-between items-center no-print">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-award text-yellow-300 text-xl"></i>
+                    <h3 class="font-bold text-lg font-fredoka">Picture Book Recommendation Report</h3>
+                </div>
+                <button id="close-final-modal" class="text-indigo-200 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 p-6 overflow-y-auto custom-scrollbar space-y-6 text-slate-800">
+                <!-- Report Header -->
+                <div class="border-b border-slate-200 pb-4 flex justify-between items-end">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 font-fredoka">English Writing Report</h2>
+                        <p class="text-xs text-slate-500 mt-1">Student ID: <span id="report-student-id" class="font-mono font-bold text-indigo-600">10101</span></p>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">
+                            <i class="fa-solid fa-check mr-1"></i> Completed
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Formatted Document Output -->
+                <div id="report-content" class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4 text-sm font-serif">
+                    <div>
+                        <h4 class="font-bold text-xs font-sans text-indigo-600 uppercase tracking-wider mb-1">Book Recommendation Title</h4>
+                        <p id="report-title-text" class="text-slate-800 italic font-semibold">I would like to recommend a picture book called '...'</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-xs font-sans text-indigo-600 uppercase tracking-wider mb-1">Summary Paragraph</h4>
+                        <p id="report-summary-text" class="text-slate-800 leading-relaxed">Summary text will appear here...</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-xs font-sans text-indigo-600 uppercase tracking-wider mb-1">Recommendation Reasons Paragraph</h4>
+                        <p id="report-reasons-text" class="text-slate-800 leading-relaxed">Reasons text will appear here...</p>
+                    </div>
+                </div>
+
+                <!-- Grammar & Criteria Compliance Summary -->
+                <div class="grid grid-cols-2 gap-3 no-print">
+                    <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs">
+                        <p class="font-bold text-amber-900 mb-1"><i class="fa-solid fa-spell-check mr-1"></i> Grammar Elements</p>
+                        <p id="report-grammar-status" class="text-slate-600">Checking purpose to-infinitive and reflexive pronouns...</p>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs">
+                        <p class="font-bold text-blue-900 mb-1"><i class="fa-solid fa-list-check mr-1"></i> Reasons Aspects</p>
+                        <p id="report-criteria-status" class="text-slate-600">Checking recommendation aspects...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Action Buttons -->
+            <div class="bg-slate-100 p-4 border-t border-slate-200 flex justify-end space-x-3 no-print">
+                <button id="copy-report-btn" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs transition flex items-center">
+                    <i class="fa-solid fa-copy mr-1.5"></i> Copy Text (복사하기)
+                </button>
+                <button id="print-report-btn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs transition flex items-center">
+                    <i class="fa-solid fa-print mr-1.5"></i> Print (인쇄하기)
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Global Application State
+         */
+        const AppState = {
+            studentId: '',
+            currentStep: 1, // Steps 1 to 8
+            spellingMistakeCount: 0,
+            hasToInfinitive: false,
+            hasReflexive: false,
+            criteriaMet: {
+                comp: false,
+                theme: false,
+                art: false,
+                emotion: false
+            },
+            drafts: {
+                title: '',
+                summary1: '',
+                summary2: '',
+                summary3: '',
+                rec1: '',
+                rec2: '',
+                rec3: '',
+                rec4: ''
+            }
+        };
+
+        // DOM Element Cache
+        const elements = {
+            loginModal: document.getElementById('login-modal'),
+            loginForm: document.getElementById('login-form'),
+            studentIdInput: document.getElementById('student-id-input'),
+            loginErrorMsg: document.getElementById('login-error-msg'),
+            studentBadge: document.getElementById('student-badge'),
+            displayStudentId: document.getElementById('display-student-id'),
+            resetBtn: document.getElementById('reset-btn'),
+            
+            stepIndicatorText: document.getElementById('step-indicator-text'),
+            stepPercentage: document.getElementById('step-percentage'),
+            progressBarFill: document.getElementById('progress-bar-fill'),
+            
+            stepBadge1: document.getElementById('step-badge-1'),
+            stepBadge2: document.getElementById('step-badge-2'),
+            stepBadge3: document.getElementById('step-badge-3'),
+            stepBadge4: document.getElementById('step-badge-4'),
+            
+            chatWindow: document.getElementById('chat-window'),
+            hintToolbar: document.getElementById('hint-toolbar'),
+            hintChipsContainer: document.getElementById('hint-chips-container'),
+            chatForm: document.getElementById('chat-form'),
+            userInput: document.getElementById('user-input'),
+            speakBtn: document.getElementById('speak-btn'),
+            sendBtn: document.getElementById('send-btn'),
+            charCount: document.getElementById('char-count'),
+            
+            checkToInfinitive: document.getElementById('check-to-infinitive'),
+            checkReflexive: document.getElementById('check-reflexive'),
+            badgeComp: document.getElementById('badge-criteria-comp'),
+            badgeTheme: document.getElementById('badge-criteria-theme'),
+            badgeArt: document.getElementById('badge-criteria-art'),
+            badgeEmotion: document.getElementById('badge-criteria-emotion'),
+            
+            checkTitle: document.getElementById('check-title'),
+            draftTitle: document.getElementById('draft-title'),
+            checkSummary: document.getElementById('check-summary'),
+            draftQ1Setting: document.getElementById('draft-q1-setting'),
+            draftQ2Action: document.getElementById('draft-q2-action'),
+            draftQ3Resolution: document.getElementById('draft-q3-resolution'),
+            checkReasons: document.getElementById('check-reasons'),
+            draftRecQ1: document.getElementById('draft-rec-q1'),
+            draftRecQ21: document.getElementById('draft-rec-q2-1'),
+            draftRecQ22: document.getElementById('draft-rec-q2-2'),
+            draftRecQ23: document.getElementById('draft-rec-q2-3'),
+            
+            viewFinalReportBtn: document.getElementById('view-final-report-btn'),
+            finalModal: document.getElementById('final-modal'),
+            closeFinalModal: document.getElementById('close-final-modal'),
+            reportStudentId: document.getElementById('report-student-id'),
+            reportTitleText: document.getElementById('report-title-text'),
+            reportSummaryText: document.getElementById('report-summary-text'),
+            reportReasonsText: document.getElementById('report-reasons-text'),
+            reportGrammarStatus: document.getElementById('report-grammar-status'),
+            reportCriteriaStatus: document.getElementById('report-criteria-status'),
+            copyReportBtn: document.getElementById('copy-report-btn'),
+            printReportBtn: document.getElementById('print-report-btn')
+        };
+
+        // /api/generate 백엔드 서버리스 함수를 호출하는 연동 함수
+        async function checkSentenceWithServer(step, text) {
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ step, text })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data; // { passed: boolean, issueType: string, feedback: string }
+            } catch (error) {
+                console.error("API호출 오류, 기존 프론트엔드 검사 엔진으로 대체합니다:", error);
+                // 서버 호출 실패 시 안전하게 기존 프론트엔드 검사 로직(validateSentence)으로 대체
+                return validateSentence(step, text);
+            }
+        }
+
+        // Initialize Login Form Handler
+        elements.loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const studentIdVal = elements.studentIdInput.value.trim();
+            
+            // Validate 5 digits
+            if (!/^\d{5}$/.test(studentIdVal)) {
+                elements.loginErrorMsg.classList.remove('hidden');
+                elements.studentIdInput.focus();
+                return;
+            }
+
+            elements.loginErrorMsg.classList.add('hidden');
+            AppState.studentId = studentIdVal;
+            elements.displayStudentId.textContent = studentIdVal;
+            
+            // UI Transition
+            elements.loginModal.classList.add('hidden');
+            elements.studentBadge.classList.remove('hidden');
+            elements.resetBtn.classList.remove('hidden');
+            
+            initTutorChat();
+        });
+
+        // Reset Button
+        elements.resetBtn.addEventListener('click', () => {
+            AppState.currentStep = 1;
+            AppState.spellingMistakeCount = 0;
+            AppState.hasToInfinitive = false;
+            AppState.hasReflexive = false;
+            AppState.criteriaMet = { comp: false, theme: false, art: false, emotion: false };
+            AppState.drafts = { title: '', summary1: '', summary2: '', summary3: '', rec1: '', rec2: '', rec3: '', rec4: '' };
+            
+            elements.studentIdInput.value = '';
+            elements.studentBadge.classList.add('hidden');
+            elements.resetBtn.classList.add('hidden');
+            elements.loginModal.classList.remove('hidden');
+            resetDraftNotebookUI();
+        });
+
+        function getStepDescription(step) {
+            const steps = [
+                "",
+                "Book Title (추천 책 제목)",
+                "Summary 1/3: Character & Setting (주인공 및 배경)",
+                "Summary 2/3: Main Event (주요 사건)",
+                "Summary 3/3: Resolution (전개 및 결말)",
+                "Reason 1: Comparative Evaluation (비교 및 총평)",
+                "Reason 2: Theme or Artwork (주제/삽화)",
+                "Reason 3: Emotional Impact or Completeness (감동/완성도)",
+                "Reason 4: Final Recommendation (종합 추천)"
+            ];
+            return steps[step] || "Writing Completed";
+        }
+
+        function getStepCorrectSpellingGuide(step) {
+            const guides = {
+                1: {
+                    text: `Please check the sentence pattern below:\n(아래 문장 패턴과 예시를 참고하여 올바른 책 제목을 포함해 보세요.)\n\n• "I would like to recommend a picture book called 'The Giving Tree'."\n• "The picture book I recommend is titled 'Wonder'."`,
+                    hints: ["I would like to recommend a picture book called '______'.", "The picture book I recommend is titled '______'."]
+                },
+                2: {
+                    text: `Please check the character & setting sentence patterns:\n(주인공과 배경을 소개하는 패턴을 확인해 보세요.)\n\n• "The main character of this book is Suleman who lives in Turkiye."\n• "The story takes place in a quiet village where Peter lives."`,
+                    hints: ["The main character of this book is ______ who lives in ______.", "The story takes place in ______ where ______ lives."]
+                },
+                3: {
+                    text: `Please check the main event sentence patterns:\n(사건 발생 및 목적을 나타내는 표현을 확인하세요.)\n\n• "He happened to find an orphan girl to protect her during the war."\n• "She tried hard to challenge herself to overcome the difficulty."`,
+                    hints: ["One day, he happened to ______ to help ______.", "She tries hard to protect ______ by herself."]
+                },
+                4: {
+                    text: `Please check the resolution sentence patterns:\n(이야기의 전개와 결말 패턴을 참고해 보세요.)\n\n• "A long time later, they met again to share their wonderful memories."\n• "Finally, the main character overcomes hardship to achieve his dream."`,
+                    hints: ["A long time later, they met again to ______.", "Finally, the main character overcomes hardship to ______."]
+                },
+                5: {
+                    text: `Please check the comparative evaluation patterns:\n(다른 책과의 비교 및 전체 총평 패턴입니다.)\n\n• "Compared to other picture books, this story gives a much deeper impression."\n• "Unlike other picture books, this book leaves a lasting message in my heart."`,
+                    hints: ["Compared to other picture books, this story ______.", "Unlike many other picture books, this book ______."]
+                },
+                6: {
+                    text: `Please check the theme & artwork sentence patterns:\n(주제 및 삽화 작성 패턴을 참고해 보세요.)\n\n• "First of all, the theme of the story teaches us to value peace."\n• "One of the best features is the artwork which expresses emotions beautifully."`,
+                    hints: ["First of all, the theme of the story teaches us to ______.", "One of the best features is the artwork which ______."]
+                },
+                7: {
+                    text: `Please check the emotional impact & completeness patterns:\n(감동 요소 및 작품 완성도 패턴입니다.)\n\n• "Furthermore, this touching story encourages readers to reflect on war and peace."\n• "Moreover, the high quality of the storyline helps readers to engage in the book."`,
+                    hints: ["Furthermore, the touching story moves readers to ______.", "Moreover, the high quality of the storyline helps readers to ______."]
+                },
+                8: {
+                    text: `Please check the final recommendation patterns:\n(마무리 종합 추천 패턴입니다.)\n\n• "For these reasons, I strongly recommend this book to everyone."\n• "In conclusion, reading this book will help yourselves to understand true love."`,
+                    hints: ["For these reasons, I strongly recommend this book to ______.", "In conclusion, reading this book will help yourselves to ______."]
+                }
+            };
+            return guides[step] || { text: "", hints: [] };
+        }
+
+        function initTutorChat() {
+            elements.chatWindow.innerHTML = '';
+            AppState.currentStep = 1;
+            updateStepProgress(1);
+            
+            const welcomeMsg = `Hello, Student ${AppState.studentId}! 👋\nWelcome to English Writing Tutor!\n(영어 그림책 추천사 작성 튜터에 오신 것을 환영합니다!)\n\n---
+### [Step 1] Recommend a Picture Book Title
+### [Step 1] 추천하고 싶은 영어 그림책 제목 소개하기
+What is the title of the picture book you would like to recommend?
+(추천하고 싶은 영어 그림책의 제목을 포함하여 7단어 이상의 완결된 한 문장으로 소개해 보세요.)`;
+
+            addChatMessage('tutor', welcomeMsg);
+            updateHints([
+                "I would like to recommend a picture book called '______'.",
+                "The picture book I recommend is titled '______'."
+            ]);
+        }
+
+        function addChatMessage(sender, text) {
+            const bubble = document.createElement('div');
+            bubble.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`;
+            
+            const content = document.createElement('div');
+            content.className = `max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed ${sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-tutor'}`;
+            
+            // Format markdown-style header & bolding
+            let formattedText = text
+                .replace(/### (.*)/g, '<h4 class="font-bold text-indigo-700 text-sm mt-1 mb-1">$1</h4>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+                
+            content.innerHTML = formattedText;
+            bubble.appendChild(content);
+            elements.chatWindow.appendChild(bubble);
+            elements.chatWindow.scrollTop = elements.chatWindow.scrollHeight;
+        }
+
+        function updateHints(hintsArray) {
+            elements.hintChipsContainer.innerHTML = '';
+            if (!hintsArray || hintsArray.length === 0) return;
+            
+            hintsArray.forEach(hint => {
+                const btn = document.createElement('button');
+                btn.className = "bg-amber-100 hover:bg-amber-200 text-amber-900 px-2.5 py-1 rounded-lg font-mono text-[11px] border border-amber-300 transition whitespace-nowrap flex-shrink-0";
+                btn.textContent = hint;
+                btn.addEventListener('click', () => {
+                    elements.userInput.value = hint.replace(/______/g, '');
+                    elements.userInput.focus();
+                    updateCharCount();
+                });
+                elements.hintChipsContainer.appendChild(btn);
+            });
+        }
+
+        elements.userInput.addEventListener('input', updateCharCount);
+        
+        function updateCharCount() {
+            const count = elements.userInput.value.length;
+            elements.charCount.textContent = `${count} characters`;
+        }
+
+        elements.chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = elements.userInput.value.trim();
+            if (!text) return;
+
+            addChatMessage('user', text);
+            elements.userInput.value = '';
+            updateCharCount();
+
+            // Check if student asks for help
+            if (isHelpRequest(text)) {
+                const guide = getStepCorrectSpellingGuide(AppState.currentStep);
+                addChatMessage('tutor', `🙋‍♂️ Please check the spelling and patterns below:\n(철자 및 작성 패턴 가이드를 확인해 보세요!)\n\n${guide.text}`);
+                updateHints(guide.hints);
+                return;
+            }
+
+            // Korean input detection
+            if (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(text)) {
+                addChatMessage('tutor', `⚠️ Please write your sentence in English.\n(한국어로 입력하셨네요! 영작문 튜터이므로 직접 영어 문장으로 작성해 주세요. 도움이 필요하면 "도움" 또는 "철자 모름"을 입력하세요.)`);
+                return;
+            }
+
+            // Word count validation (min 7 words)
+            const words = text.split(/\s+/).filter(w => w.length > 0);
+            if (words.length < 7) {
+                addChatMessage('tutor', `⚠️ Your sentence is too short (${words.length} words).\n(작성하신 문장의 길이가 7단어 미만으로 너무 짧습니다. 최소 **7단어 이상**의 완전한 영어 문장으로 작성해 주세요!)`);
+                return;
+            }
+
+            // Validate sentence using Gemini API Server / Fallback Engine
+            await handleTutorResponse(text);
+        });
+
+        function isHelpRequest(text) {
+            const lower = text.toLowerCase();
+            return lower.includes('철자') || lower.includes('모름') || lower.includes('help') || lower.includes('도움');
+        }
+
+        /**
+         * Comprehensive Local Spelling, Grammar, and Content Evaluation Engine (Fallback)
+         */
+        function validateSentence(step, text) {
+            const lower = text.toLowerCase();
+            const words = lower.match(/\b[a-z']+\b/g) || [];
+            
+            // 1. Common Spelling & Grammar Typo Rules Database
+            const typoRules = [
+                { wrong: 'happend', correct: 'happened', reason: "'happend'는 철자 오류입니다. 올바른 표기는 'happened'입니다." },
+                { wrong: 'recomend', correct: 'recommend', reason: "'recomend'는 철자 오류입니다. 올바른 표기는 'recommend'입니다." },
+                { wrong: 'charactor', correct: 'character', reason: "'charactor'는 철자 오류입니다. 올바른 표기는 'character'입니다." },
+                { wrong: 'turkiye', correct: 'Türkiye / Turkey', reason: "국가 이름이나 고유명사는 첫 글자를 대문자로 써야 합니다. (e.g. Türkiye)" },
+                { wrong: 'break out a war', correct: 'break out war / cause war', reason: "'break out'은 자동사이므로 'break out a war'보다는 'cause a war' 또는 'start a war' 표현이 어법상 더 자연스럽습니다." },
+                { wrong: 'themself', correct: 'themselves', reason: "복수 재귀대명사 표기는 'themselves'가 올바른 어법입니다." },
+                { wrong: 'himselves', correct: 'himself', reason: "단수 재귀대명사 표기는 'himself'가 올바른 어법입니다." }
+            ];
+
+            for (const rule of typoRules) {
+                if (lower.includes(rule.wrong)) {
+                    return {
+                        passed: false,
+                        issueType: 'Spelling/Grammar',
+                        feedback: `Please check your spelling and grammar.\n(어법 및 철자 오류가 감지되었습니다: **${rule.reason}**)`
+                    };
+                }
+            }
+
+            // 2. Step-by-Step Contextual Appropriateness Check
+            if (step === 1) {
+                if (text.includes("...") || text.includes("'...'") || lower.includes("called ''") || lower.includes("titled ''")) {
+                    return {
+                        passed: false,
+                        issueType: 'Content Appropriateness',
+                        feedback: `Please specify the exact title of the picture book.\n(그림책의 실제 제목을 따옴표 안에 명확히 입력해 주세요. 예: 'The Giving Tree')`
+                    };
+                }
+                if (!lower.includes('recommend') && !lower.includes('title') && !lower.includes('called')) {
+                    return {
+                        passed: false,
+                        issueType: 'Content Appropriateness',
+                        feedback: `Please include a clear recommendation expression for the book title.\n(추천하는 책의 제목과 함께 'recommend', 'called', 'titled' 등의 표현을 사용하여 문장을 완성해 주세요.)`
+                    };
+                }
+            } else if (step === 2) {
+                if (!lower.includes('character') && !lower.includes('story') && !lower.includes('lives') && !lower.includes('who') && !lower.includes('takes place')) {
+                    return {
+                        passed: false,
+                        issueType: 'Content Appropriateness',
+                        feedback: `Please introduce the main character and setting in this sentence.\n(주인공이 누구인지, 어디서/언제 일어나는 일인지 내용이 잘 드러나도록 작성해 주세요.)`
+                    };
+                }
+            } else if (step === 5) {
+                if (!lower.includes('compared to') && !lower.includes('unlike')) {
+                    return {
+                        passed: false,
+                        issueType: 'Content Appropriateness',
+                        feedback: `Please use comparative expressions like 'Compared to...' or 'Unlike...'.\n(다른 책과의 비교를 위해 **'Compared to...'** 또는 **'Unlike...'** 표현을 반드시 문두나 문중에 포함해 주세요.)`
+                    };
+                }
+            }
+
+            return { passed: true };
+        }
+
+        function checkGrammarUsageInText(text) {
+            const lower = text.toLowerCase();
+            // Check purpose to-infinitive (to + verb)
+            if (/\bto\s+[a-z]{3,}\b/.test(lower)) {
+                AppState.hasToInfinitive = true;
+            }
+            // Check reflexive pronouns
+            if (/\b(himself|herself|myself|yourselves|themselves|itself)\b/.test(lower)) {
+                AppState.hasReflexive = true;
+            }
+            // Check criteria aspects
+            if (lower.includes('compared to') || lower.includes('unlike')) AppState.criteriaMet.comp = true;
+            if (lower.includes('theme') || lower.includes('teaches') || lower.includes('message')) AppState.criteriaMet.theme = true;
+            if (lower.includes('artwork') || lower.includes('illustration') || lower.includes('picture')) AppState.criteriaMet.art = true;
+            if (lower.includes('touching') || lower.includes('impression') || lower.includes('completeness')) AppState.criteriaMet.emotion = true;
+
+            updateGrammarChecklistUI();
+        }
+
+        async function handleTutorResponse(userText) {
+            // Gemini API 서버를 호출하여 문장 검사 진행
+            const evalResult = await checkSentenceWithServer(AppState.currentStep, userText);
+
+            if (!evalResult.passed) {
+                AppState.spellingMistakeCount++;
+                let hintMsg = "";
+                if (AppState.spellingMistakeCount >= 3) {
+                    const guide = getStepCorrectSpellingGuide(AppState.currentStep);
+                    hintMsg = `\n\n💡 **Pattern Hint (패턴 힌트):**\n${guide.text}`;
+                    updateHints(guide.hints);
+                }
+                
+                addChatMessage('tutor', `❌ **Feedback: ${evalResult.issueType || 'Check'} Error**\n${evalResult.feedback}${hintMsg}`);
+                return;
+            }
+
+            // Reset mistake counter on pass
+            AppState.spellingMistakeCount = 0;
+            checkGrammarUsageInText(userText);
+
+            let feedback = '';
+            let nextHints = [];
+
+            if (AppState.currentStep === 1) {
+                AppState.drafts.title = userText;
+                feedback = `Great job! Your book title introduction sentence is well written.\n(훌륭합니다! 추천 책 제목 소개 문장이 성공적으로 작성되었습니다.)\n\n---
+### [Step 2] Summary 1/3: Character & Setting
+### [Step 2] 중심내용 소개 (1/3): 주인공 및 배경
+Who is the main character, and where does the story take place?
+(주인공은 누구이며 어디서 벌어지는 이야기인지 7단어 이상의 문장으로 작성하세요.)`;
+                nextHints = [
+                    "The main character of this book is ______ who lives in ______.",
+                    "The story takes place in ______ where ______ lives."
+                ];
+            } else if (AppState.currentStep === 2) {
+                AppState.drafts.summary1 = userText;
+                feedback = `Excellent! The character and setting introduction sentence is complete.\n(좋습니다! 주인공과 배경을 설명하는 문장이 완벽하게 작성되었습니다.)\n\n---
+### [Step 3] Summary 2/3: Main Event
+### [Step 3] 중심내용 소개 (2/3): 주요 사건
+What main event or challenge happens to the protagonist?
+(주인공에게 어떤 주요 사건이나 도전 과제가 발생하나요? 목적의 to부정사나 재귀대명사를 적극 활용해 보세요.)`;
+                nextHints = [
+                    "One day, he happened to ______ to help ______.",
+                    "She tries very hard to protect ______ by herself."
+                ];
+            } else if (AppState.currentStep === 3) {
+                AppState.drafts.summary2 = userText;
+                feedback = `Nice work! The main event sentence is clearly expressed.\n(잘하셨습니다! 사건 전개 영문장이 훌륭하게 완성되었습니다.)\n\n---
+### [Step 4] Summary 3/3: Resolution
+### [Step 4] 중심내용 소개 (3/3): 전개 및 결말
+How does the story develop or end?
+(이야기가 어떻게 전개되거나 결말을 맺는지 작성하세요.)`;
+                nextHints = [
+                    "A long time later, they met again to ______.",
+                    "Finally, the main character overcomes hardship to ______."
+                ];
+            } else if (AppState.currentStep === 4) {
+                AppState.drafts.summary3 = userText;
+                feedback = `Wonderful! You have completed all 3 summary sentences.\n(멋집니다! 그림책의 줄거리 3문장을 모두 완성했습니다.)\n\n---
+### [Step 5] Recommendation Reason 1: Comparative Overall Evaluation
+### [Step 5] 추천 이유 1: 비교 및 전체 총평
+Compare this book with other picture books using 'Compared to...' or 'Unlike...'.
+(다른 책들과 비교하여 이 책이 주는 느낌과 전체 총평을 서술해 보세요.)`;
+                nextHints = [
+                    "Compared to other picture books, this story ______.",
+                    "Unlike many other picture books, this book ______."
+                ];
+            } else if (AppState.currentStep === 5) {
+                AppState.drafts.rec1 = userText;
+                feedback = `Awesome! Your comparative overall recommendation sentence is great.\n(아주 훌륭합니다! 비교를 통한 전체 총평 문장이 근사합니다.)\n\n---
+### [Step 6] Recommendation Reason 2: Theme or Artwork
+### [Step 6] 세부 추천 이유 1: 주제 또는 삽화
+Write a recommendation reason about the **Theme (주제)** or **Artwork (삽화)**.
+(책의 주제 전달력이나 인상적인 그림/삽화 요소에 대해 서술해 보세요.)`;
+                nextHints = [
+                    "First of all, the theme of the story teaches us to ______.",
+                    "One of the best features is the artwork which ______."
+                ];
+            } else if (AppState.currentStep === 6) {
+                AppState.drafts.rec2 = userText;
+                feedback = `Good point! Your detailed reason about theme or artwork is impressive.\n(좋은 지적입니다! 주제나 삽화에 대한 세부 추천 이유가 인상적입니다.)\n\n---
+### [Step 7] Recommendation Reason 3: Emotional Impact or Completeness
+### [Step 7] 세부 추천 이유 2: 감동 요소 또는 작품 완성도
+Write another reason about **Emotional Impact (감동)** or **Completeness (완성도)**.
+(읽고 난 후의 감동 요소나 스토리의 뛰어난 완성도에 대해 서술해 보세요.)`;
+                nextHints = [
+                    "Furthermore, the touching story moves readers to ______.",
+                    "Moreover, the high quality of the storyline helps readers to ______."
+                ];
+            } else if (AppState.currentStep === 7) {
+                AppState.drafts.rec3 = userText;
+                feedback = `Great work! You provided persuasive recommendation reasons.\n(잘하셨습니다! 설득력 있는 세부 추천 이유가 잘 구성되었습니다.)\n\n---
+### [Step 8] Recommendation Reason 4: Final Recommendation
+### [Step 8] 추천 이유 4: 최종 종합 추천
+Write a closing recommendation sentence to your readers.
+(독자들과 친구들에게 권하는 마무리 종합 추천 문장을 작성하세요.)`;
+                nextHints = [
+                    "For these reasons, I strongly recommend this book to ______.",
+                    "In conclusion, reading this book will help yourselves to ______."
+                ];
+            } else if (AppState.currentStep === 8) {
+                AppState.drafts.rec4 = userText;
+                feedback = `Congratulations! You have completed your picture book recommendation writing!\n(축하합니다! 영어 그림책 추천사 작성을 모두 끝마쳤습니다!)\n\nPlease click **[View Final Report]** in the right notebook window to check your result.
+(우측 노트 화면의 [View Final Report] 버튼을 눌러 최종 결과를 확인하고 복사할 수 있습니다.)`;
+                nextHints = [];
+            }
+
+            addChatMessage('tutor', feedback);
+            updateHints(nextHints);
+            advanceStep();
+        }
+
+        function advanceStep() {
+            if (AppState.currentStep < 8) {
+                AppState.currentStep++;
+                updateStepProgress(AppState.currentStep);
+            } else {
+                updateStepProgress(8);
+                document.getElementById('notebook-status-badge').textContent = "Completed!";
+                document.getElementById('notebook-status-badge').className = "text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full";
+            }
+            updateNotebookDraftUI();
+        }
+
+        function updateStepProgress(step) {
+            const percentage = Math.round((step / 8) * 100);
+            elements.stepIndicatorText.textContent = `Step ${step}: ${getStepDescription(step)}`;
+            elements.stepPercentage.textContent = `${percentage}%`;
+            elements.progressBarFill.style.width = `${percentage}%`;
+
+            // Step Badge Highlight
+            elements.stepBadge1.className = step >= 1 ? "text-indigo-600 font-bold flex items-center" : "flex items-center";
+            elements.stepBadge2.className = step >= 2 ? "text-indigo-600 font-bold flex items-center" : "flex items-center";
+            elements.stepBadge3.className = step >= 5 ? "text-indigo-600 font-bold flex items-center" : "flex items-center";
+            elements.stepBadge4.className = step >= 6 ? "text-indigo-600 font-bold flex items-center" : "flex items-center";
+        }
+
+        function updateGrammarChecklistUI() {
+            if (AppState.hasToInfinitive) {
+                elements.checkToInfinitive.className = "flex items-center text-emerald-600 font-semibold transition-all";
+                elements.checkToInfinitive.querySelector('i').className = "fa-solid fa-circle-check mr-1.5 text-emerald-500";
+            }
+            if (AppState.hasReflexive) {
+                elements.checkReflexive.className = "flex items-center text-emerald-600 font-semibold transition-all";
+                elements.checkReflexive.querySelector('i').className = "fa-solid fa-circle-check mr-1.5 text-emerald-500";
+            }
+
+            if (AppState.criteriaMet.comp) elements.badgeComp.className = "bg-blue-600 text-white font-bold px-2 py-0.5 rounded text-center";
+            if (AppState.criteriaMet.theme) elements.badgeTheme.className = "bg-blue-600 text-white font-bold px-2 py-0.5 rounded text-center";
+            if (AppState.criteriaMet.art) elements.badgeArt.className = "bg-blue-600 text-white font-bold px-2 py-0.5 rounded text-center";
+            if (AppState.criteriaMet.emotion) elements.badgeEmotion.className = "bg-blue-600 text-white font-bold px-2 py-0.5 rounded text-center";
+        }
+
+        function updateNotebookDraftUI() {
+            if (AppState.drafts.title) {
+                elements.draftTitle.textContent = AppState.drafts.title;
+                elements.draftTitle.className = "text-xs text-slate-800 font-medium";
+                elements.checkTitle.className = "fa-solid fa-circle-check text-emerald-500";
+            }
+            if (AppState.drafts.summary1) elements.draftQ1Setting.textContent = `• 1) ${AppState.drafts.summary1}`;
+            if (AppState.drafts.summary2) elements.draftQ2Action.textContent = `• 2) ${AppState.drafts.summary2}`;
+            if (AppState.drafts.summary3) {
+                elements.draftQ3Resolution.textContent = `• 3) ${AppState.drafts.summary3}`;
+                elements.checkSummary.className = "fa-solid fa-circle-check text-emerald-500";
+            }
+            if (AppState.drafts.rec1) elements.draftRecQ1.textContent = `• 1) ${AppState.drafts.rec1}`;
+            if (AppState.drafts.rec2) elements.draftRecQ21.textContent = `• 2) ${AppState.drafts.rec2}`;
+            if (AppState.drafts.rec3) elements.draftRecQ22.textContent = `• 3) ${AppState.drafts.rec3}`;
+            if (AppState.drafts.rec4) {
+                elements.draftRecQ23.textContent = `• 4) ${AppState.drafts.rec4}`;
+                elements.checkReasons.className = "fa-solid fa-circle-check text-emerald-500";
+            }
+        }
+
+        function resetDraftNotebookUI() {
+            elements.draftTitle.textContent = "Not written yet. (아직 작성되지 않음)";
+            elements.draftTitle.className = "text-xs text-slate-400 italic";
+            elements.checkTitle.className = "fa-solid fa-circle-check text-slate-300";
+
+            elements.draftQ1Setting.textContent = "• Sentence 1: Character & Setting";
+            elements.draftQ2Action.textContent = "• Sentence 2: Main Event";
+            elements.draftQ3Resolution.textContent = "• Sentence 3: Resolution";
+            elements.checkSummary.className = "fa-solid fa-circle-check text-slate-300";
+
+            elements.draftRecQ1.textContent = "• 1) Overall Evaluation (비교 및 전체 총평)";
+            elements.draftRecQ21.textContent = "• 2) Reason 1 (주제/감동/삽화/완성도 중 1)";
+            elements.draftRecQ22.textContent = "• 3) Reason 2 (주제/감동/삽화/완성도 중 2)";
+            elements.draftRecQ23.textContent = "• 4) Reason 3 (주제/감동/삽화/완성도 중 3)";
+            elements.checkReasons.className = "fa-solid fa-circle-check text-slate-300";
+
+            elements.checkToInfinitive.className = "flex items-center text-slate-400 transition-all";
+            elements.checkToInfinitive.querySelector('i').className = "fa-solid fa-circle-xmark mr-1.5 text-slate-300";
+            elements.checkReflexive.className = "flex items-center text-slate-400 transition-all";
+            elements.checkReflexive.querySelector('i').className = "fa-solid fa-circle-xmark mr-1.5 text-slate-300";
+
+            elements.badgeComp.className = "bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center";
+            elements.badgeTheme.className = "bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center";
+            elements.badgeArt.className = "bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center";
+            elements.badgeEmotion.className = "bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center";
+        }
+
+        // Voice Input Web Speech API Fallback
+        elements.speakBtn.addEventListener('click', () => {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.onstart = () => {
+                    elements.speakBtn.classList.add('text-red-500', 'animate-pulse');
+                };
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    elements.userInput.value = transcript;
+                    updateCharCount();
+                };
+                recognition.onend = () => {
+                    elements.speakBtn.classList.remove('text-red-500', 'animate-pulse');
+                };
+                recognition.start();
+            } else {
+                addChatMessage('tutor', 'ℹ️ Current browser does not support voice input. Please type your input.\n(사용 중인 브라우저가 음성 인식을 지원하지 않습니다. 직접 텍스트로 입력해 주세요.)');
+            }
+        });
+
+        // Final Report Modal Actions
+        elements.viewFinalReportBtn.addEventListener('click', () => {
+            elements.reportStudentId.textContent = AppState.studentId || "10101";
+            elements.reportTitleText.textContent = AppState.drafts.title || "Not written";
+            
+            const summaryParts = [AppState.drafts.summary1, AppState.drafts.summary2, AppState.drafts.summary3].filter(Boolean);
+            elements.reportSummaryText.textContent = summaryParts.length > 0 ? summaryParts.join(' ') : "Summary not completed yet.";
+
+            const reasonParts = [AppState.drafts.rec1, AppState.drafts.rec2, AppState.drafts.rec3, AppState.drafts.rec4].filter(Boolean);
+            elements.reportReasonsText.textContent = reasonParts.length > 0 ? reasonParts.join(' ') : "Recommendation reasons not completed yet.";
+
+            // Status checks
+            const grammarOk = AppState.hasToInfinitive && AppState.hasReflexive;
+            elements.reportGrammarStatus.textContent = grammarOk 
+                ? "✅ Both 'Purpose To-Infinitive' and 'Reflexive Pronoun' are successfully included."
+                : "⚠️ Missing grammar elements: Ensure 'to + verb' and '-self' pronouns are present.";
+
+            const countCriteria = Object.values(AppState.criteriaMet).filter(Boolean).length;
+            elements.reportCriteriaStatus.textContent = countCriteria >= 3 
+                ? `✅ Required aspects fulfilled (${countCriteria}/4 aspects covered).`
+                : `⚠️ ${countCriteria}/3 aspects covered. Try including theme, artwork, or emotional impact.`;
+
+            elements.finalModal.classList.remove('hidden');
+        });
+
+        elements.closeFinalModal.addEventListener('click', () => {
+            elements.finalModal.classList.add('hidden');
+        });
+
+        elements.copyReportBtn.addEventListener('click', () => {
+            const fullReport = `[English Picture Book Recommendation Report]\nStudent ID: ${AppState.studentId}\nTitle: ${AppState.drafts.title}\n\n1. Summary:\n${AppState.drafts.summary1} ${AppState.drafts.summary2} ${AppState.drafts.summary3}\n\n2. Recommendation Reasons:\n${AppState.drafts.rec1} ${AppState.drafts.rec2} ${AppState.drafts.rec3} ${AppState.drafts.rec4}`;
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = fullReport;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            elements.copyReportBtn.innerHTML = `<i class="fa-solid fa-check mr-1.5 text-emerald-600"></i> Copied!`;
+            setTimeout(() => {
+                elements.copyReportBtn.innerHTML = `<i class="fa-solid fa-copy mr-1.5"></i> Copy Text (복사하기)`;
+            }, 2000);
+        });
+
+        elements.printReportBtn.addEventListener('click', () => {
+            window.print();
+        });
+    </script>
+</body>
+</html>
