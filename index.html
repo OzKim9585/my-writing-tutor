@@ -99,7 +99,6 @@
 
     <main class="flex-1 flex overflow-hidden relative">
 
-        <!-- LOGIN MODAL -->
         <div id="login-modal" class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center transform transition-all border-4 border-indigo-100">
                 <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner">
@@ -138,16 +137,13 @@
             </div>
         </div>
 
-        <!-- MAIN LAYOUT -->
         <div class="flex-1 flex flex-col md:flex-row w-full h-full overflow-hidden">
 
-            <!-- LEFT: Chat Interface -->
             <div class="flex-1 flex flex-col h-full bg-slate-50 border-r border-slate-200">
                 
-                <!-- Stepper Progress Header -->
                 <div class="bg-white border-b border-slate-200 p-3 px-4 shadow-sm flex-shrink-0">
                     <div class="flex justify-between text-xs font-semibold text-slate-500 mb-1.5">
-                        <span id="step-indicator-text">Step 1: Book Title (추천 책 제목 소개)</span>
+                        <span id="step-indicator-text">Step 1: Book Title (창작 그림책 제목 소개)</span>
                         <span id="step-percentage">12%</span>
                     </div>
                     <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200">
@@ -161,10 +157,8 @@
                     </div>
                 </div>
 
-                <!-- Chat History -->
                 <div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar"></div>
 
-                <!-- Hint Toolbar (패턴 빈칸 형식) -->
                 <div id="hint-toolbar" class="bg-amber-50 border-t border-amber-200 px-4 py-2 flex items-center justify-between text-xs text-amber-800 flex-shrink-0">
                     <div class="flex items-center space-x-2 overflow-x-auto custom-scrollbar py-1 w-full">
                         <span class="font-bold whitespace-nowrap text-amber-900 flex items-center flex-shrink-0">
@@ -174,7 +168,6 @@
                     </div>
                 </div>
 
-                <!-- Message Input -->
                 <div class="bg-white p-3 border-t border-slate-200 shadow-lg flex-shrink-0">
                     <form id="chat-form" class="flex space-x-2 items-center">
                         <div class="relative flex-1">
@@ -189,14 +182,13 @@
                         </button>
                     </form>
                     <div class="flex justify-between items-center mt-1.5 px-1 text-[11px] text-slate-400">
-                        <span>💡 창작 그림책의 앞뒤 이야기 맥락과 어법, 철자, 논리성을 분석합니다.</span>
+                        <span>💡 창작 그림책의 앞뒤 맥락과 어법, 논리성을 분석합니다.</span>
                         <span id="char-count">0 characters</span>
                     </div>
                 </div>
 
             </div>
 
-            <!-- RIGHT: Notebook & Preview -->
             <div class="w-full md:w-80 lg:w-96 bg-white flex flex-col border-l border-slate-200 shadow-sm h-full flex-shrink-0">
                 <div class="bg-slate-50 border-b border-slate-200 p-3 px-4 flex justify-between items-center flex-shrink-0">
                     <h3 class="font-bold text-slate-700 text-sm flex items-center">
@@ -206,7 +198,6 @@
                 </div>
 
                 <div class="flex-1 p-4 overflow-y-auto custom-scrollbar space-y-4">
-                    <!-- Grammar Checklist -->
                     <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3 shadow-xs">
                         <div class="flex items-center justify-between text-xs font-bold text-amber-900 mb-1.5">
                             <span><i class="fa-solid fa-spell-check text-amber-600 mr-1"></i>Grammar Checklist (필수 문법)</span>
@@ -224,7 +215,6 @@
                         </div>
                     </div>
 
-                    <!-- Reasons Criteria -->
                     <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-3 shadow-xs">
                         <div class="flex items-center justify-between text-xs font-bold text-blue-900 mb-1.5">
                             <span><i class="fa-solid fa-layer-group text-blue-600 mr-1"></i>Reasons Criteria (추천 요소)</span>
@@ -238,16 +228,14 @@
                         </div>
                     </div>
 
-                    <!-- Section 1 -->
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-xs transition-all">
                         <div class="flex items-center justify-between text-xs font-bold text-slate-500 mb-1 border-b border-slate-200 pb-1">
-                            <span><i class="fa-solid fa-bookmark text-indigo-400 mr-1"></i>Book Title (추천 책 제목)</span>
+                            <span><i class="fa-solid fa-bookmark text-indigo-400 mr-1"></i>Book Title (창작 그림책 제목)</span>
                             <i id="check-title" class="fa-solid fa-circle-check text-slate-300"></i>
                         </div>
                         <p id="draft-title" class="text-xs text-slate-400 italic">Not written yet. (아직 작성되지 않음)</p>
                     </div>
 
-                    <!-- Section 2 -->
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-xs transition-all">
                         <div class="flex items-center justify-between text-xs font-bold text-slate-500 mb-1 border-b border-slate-200 pb-1">
                             <span><i class="fa-solid fa-align-left text-indigo-400 mr-1"></i>Summary (중심내용 소개 - 3문장)</span>
@@ -260,7 +248,6 @@
                         </div>
                     </div>
 
-                    <!-- Section 3 -->
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-xs transition-all">
                         <div class="flex items-center justify-between text-xs font-bold text-slate-500 mb-1 border-b border-slate-200 pb-1">
                             <span><i class="fa-solid fa-star text-indigo-400 mr-1"></i>Recommendation Reasons (추천 이유 문단)</span>
@@ -284,7 +271,6 @@
         </div>
     </main>
 
-    <!-- FINAL REPORT MODAL -->
     <div id="final-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col border border-slate-200 overflow-hidden">
             <div class="bg-indigo-600 text-white p-4 px-6 flex justify-between items-center no-print">
@@ -464,22 +450,95 @@
             return steps[step] || "Writing Completed";
         }
 
+        // 단계별 질문 지침 가이드
+        function getStepPromptGuide(step) {
+            const prompts = {
+                1: {
+                    title: "[Step 1] 내가 만든 창작 그림책 제목 소개하기",
+                    eng: "What is the title of your picture book?",
+                    kor: "여러분이 직접 만든 창작 그림책의 제목을 포함하여 7단어 이상의 완결된 한 문장으로 소개해 보세요.",
+                    hints: [
+                        "I would like to recommend a picture book called '______'.",
+                        "The picture book I created is titled '______'."
+                    ]
+                },
+                2: {
+                    title: "[Step 2] 중심내용 소개 (1/3): 주인공 및 배경",
+                    eng: "Who is the main character, and where or when does the story take place?",
+                    kor: "주인공은 누구이며 어디서(또는 언제) 일어나는 이야기인지 7단어 이상의 문장으로 작성하세요.",
+                    hints: [
+                        "The main character of this book is ______ who lives in ______.",
+                        "The story takes place in ______ where ______ lives."
+                    ]
+                },
+                3: {
+                    title: "[Step 3] 중심내용 소개 (2/3): 주요 사건",
+                    eng: "What main event, challenge, or conflict happens to the protagonist?",
+                    kor: "주인공에게 어떤 사건이나 문제 상황이 발생하나요? 목적의 to부정사(to + 동사원형)나 재귀대명사를 적극 활용해 보세요.",
+                    hints: [
+                        "One day, ______ happened to ______ to help ______.",
+                        "She tries very hard to ______ by herself."
+                    ]
+                },
+                4: {
+                    title: "[Step 4] 중심내용 소개 (3/3): 전개 및 결말",
+                    eng: "How does the story develop, and how is it resolved in the end?",
+                    kor: "이야기가 어떻게 전개되어 결말을 맺나요?",
+                    hints: [
+                        "After that, they met again to ______.",
+                        "Finally, the main character overcomes hardship to ______."
+                    ]
+                },
+                5: {
+                    title: "[Step 5] 추천 이유 1: 비교 및 전체 총평",
+                    eng: "Compare your book with other picture books using 'Compared to...' or 'Unlike...'.",
+                    kor: "'Compared to...' 또는 'Unlike...'를 사용하여 다른 책들과 비교한 전체 총평을 서술해 보세요.",
+                    hints: [
+                        "Compared to other picture books, this story ______.",
+                        "Unlike many other picture books, this book ______."
+                    ]
+                },
+                6: {
+                    title: "[Step 6] 세부 추천 이유 1: 주제 또는 삽화",
+                    eng: "Write a recommendation reason about the Theme or Artwork.",
+                    kor: "직접 그린 그림책의 '주제/메시지(Theme)' 또는 인상적인 '그림/삽화(Artwork)'에 대한 추천 이유를 작성하세요.",
+                    hints: [
+                        "First of all, the theme of the story teaches us to ______.",
+                        "One of the best features is the artwork which ______."
+                    ]
+                },
+                7: {
+                    title: "[Step 7] 세부 추천 이유 2: 감동 요소 또는 작품 완성도",
+                    eng: "Write another reason about Emotional Impact or Story Completeness.",
+                    kor: "읽고 난 후의 '감동(Emotional impact)' 또는 스토리의 '완성도(Completeness)'에 대한 추천 이유를 작성하세요.",
+                    hints: [
+                        "Furthermore, the touching story moves readers to ______.",
+                        "Moreover, the high quality of the storyline helps readers to ______."
+                    ]
+                },
+                8: {
+                    title: "[Step 8] 추천 이유 4: 최종 종합 추천",
+                    eng: "Write a closing recommendation sentence to your readers.",
+                    kor: "친구들과 독자들에게 책을 권하는 마무리 종합 추천 문장을 작성하세요.",
+                    hints: [
+                        "For these reasons, I strongly recommend this book to ______.",
+                        "In conclusion, reading this book will help yourselves to ______."
+                    ]
+                }
+            };
+            return prompts[step] || null;
+        }
+
         function initTutorChat() {
             elements.chatWindow.innerHTML = '';
             AppState.currentStep = 1;
             updateStepProgress(1);
             
-            const welcomeMsg = `Hello, Student ${AppState.studentId}! 👋\nWelcome to English Writing Tutor!\n(창작 그림책 추천사 작성 튜터에 오신 것을 환영합니다!)\n\n---
-### [Step 1] Introduce Your Creative Picture Book Title
-### [Step 1] 내가 만든 창작 그림책 제목 소개하기
-What is the title of your picture book?
-(여러분이 직접 만든 그림책의 제목을 포함하여 7단어 이상의 완결된 한 문장으로 소개해 보세요.)`;
+            const guide = getStepPromptGuide(1);
+            const welcomeMsg = `Hello, Student ${AppState.studentId}! 👋\nWelcome to English Writing Tutor!\n(창작 그림책 추천사 작성 튜터에 오신 것을 환영합니다!)\n\n---\n### ${guide.title}\n${guide.eng}\n(${guide.kor})`;
 
             addChatMessage('tutor', welcomeMsg);
-            updateHints([
-                "I would like to recommend a picture book called '______'.",
-                "The picture book I created is titled '______'."
-            ]);
+            updateHints(guide.hints);
         }
 
         function addChatMessage(sender, text) {
@@ -499,7 +558,6 @@ What is the title of your picture book?
             elements.chatWindow.scrollTop = elements.chatWindow.scrollHeight;
         }
 
-        // 패턴 빈칸(______)을 유지하면서 클릭 시 빈칸 앞부분까지만 입력창에 채워주는 편의 기능
         function updateHints(hintsArray) {
             elements.hintChipsContainer.innerHTML = '';
             if (!hintsArray || hintsArray.length === 0) return;
@@ -509,7 +567,6 @@ What is the title of your picture book?
                 btn.className = "bg-amber-100 hover:bg-amber-200 text-amber-900 px-2.5 py-1 rounded-lg font-mono text-[11px] border border-amber-300 transition whitespace-nowrap flex-shrink-0";
                 btn.textContent = hint;
                 btn.addEventListener('click', () => {
-                    // 첫 번째 빈칸 위치 앞까지만 채워주어 직접 작성 유도
                     const firstBlankIndex = hint.indexOf('______');
                     if (firstBlankIndex !== -1) {
                         elements.userInput.value = hint.substring(0, firstBlankIndex);
@@ -537,7 +594,6 @@ What is the title of your picture book?
             elements.userInput.value = '';
             updateCharCount();
 
-            // 모든 판단을 제미나이에게 직접 위임
             handleTutorResponse(text);
         });
 
@@ -548,7 +604,7 @@ What is the title of your picture book?
             loadingBubble.innerHTML = `
                 <div class="max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed chat-bubble-tutor flex items-center space-x-2 text-indigo-600">
                     <i class="fa-solid fa-spinner fa-spin"></i>
-                    <span>Gemini AI가 작성된 이야기 흐름과 어법, 논리성을 분석 중입니다...</span>
+                    <span>Gemini AI가 문맥과 어법, 논리성을 분석 중입니다...</span>
                 </div>
             `;
             elements.chatWindow.appendChild(loadingBubble);
@@ -575,7 +631,7 @@ What is the title of your picture book?
                     return;
                 }
 
-                // 1. 도움말/질문인 경우
+                // 1. 도움말 요청인 경우
                 if (evalResult.intent === 'help') {
                     addChatMessage('tutor', `💡 **[작성 힌트 및 패턴 안내]**\n${evalResult.feedback}`);
                     if (evalResult.suggestedHints && evalResult.suggestedHints.length > 0) {
@@ -584,7 +640,7 @@ What is the title of your picture book?
                     return;
                 }
 
-                // 2. 제출 문장에 보완/수정이 필요한 경우
+                // 2. 제출 문장에 오류가 있는 경우
                 if (!evalResult.passed) {
                     AppState.spellingMistakeCount++;
                     addChatMessage('tutor', `❌ **[${evalResult.issueType || '수정 필요'}]**\n${evalResult.feedback}`);
@@ -594,7 +650,7 @@ What is the title of your picture book?
                     return;
                 }
 
-                // 3. 통과한 경우 (체크리스트 갱신 및 노트 반영)
+                // 3. 통과(passed: true) 시
                 AppState.spellingMistakeCount = 0;
                 if (evalResult.detectedGrammar?.hasToInfinitive) AppState.hasToInfinitive = true;
                 if (evalResult.detectedGrammar?.hasReflexive) AppState.hasReflexive = true;
@@ -611,9 +667,32 @@ What is the title of your picture book?
                 };
                 AppState.drafts[stepDraftMap[AppState.currentStep]] = userText;
 
-                addChatMessage('tutor', evalResult.feedback);
-                if (evalResult.suggestedHints && evalResult.suggestedHints.length > 0) {
-                    updateHints(evalResult.suggestedHints);
+                // 다음 단계로 전환
+                const nextStepNumber = AppState.currentStep + 1;
+                let fullFeedback = evalResult.feedback;
+
+                // 백엔드에서 다음 단계 질문이 누락된 경우 프론트엔드에서 안전하게 자동 보완
+                if (nextStepNumber <= 8 && !fullFeedback.includes(`Step ${nextStepNumber}`)) {
+                    const nextGuide = getStepPromptGuide(nextStepNumber);
+                    if (nextGuide) {
+                        fullFeedback += `\n\n---\n### ${nextGuide.title}\n${nextGuide.eng}\n(${nextGuide.kor})`;
+                    }
+                } else if (nextStepNumber > 8 && !fullFeedback.includes('View Final Report')) {
+                    fullFeedback += `\n\n🎉 모든 문장을 완성했습니다! 우측 노트의 **[View Final Report]** 버튼을 눌러 최종 결과를 확인하세요.`;
+                }
+
+                addChatMessage('tutor', fullFeedback);
+
+                // 힌트 갱신: 백엔드 제공 힌트 우선, 없을 시 기본 힌트 사용
+                if (nextStepNumber <= 8) {
+                    if (evalResult.suggestedHints && evalResult.suggestedHints.length > 0) {
+                        updateHints(evalResult.suggestedHints);
+                    } else {
+                        const nextGuide = getStepPromptGuide(nextStepNumber);
+                        if (nextGuide) updateHints(nextGuide.hints);
+                    }
+                } else {
+                    updateHints([]);
                 }
 
                 advanceStep();
