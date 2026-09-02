@@ -106,7 +106,7 @@
                     <i class="fa-solid fa-id-card"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800 mb-1">Welcome! 👋</h2>
-                <p class="text-slate-600 text-xs mb-4">반갑습니다!<br>우리가 직접 만든 창작 그림책의 추천사를 작성해 봅시다!<br>Please enter your <strong>5-digit Student ID</strong>. (학번 5자리 입력)</p>
+                <p class="text-slate-600 text-xs mb-4">반갑습니다!<br>직접 만든 창작 그림책의 추천사를 9단계로 작성해 봅시다!<br>Please enter your <strong>5-digit Student ID</strong>. (학번 5자리 입력)</p>
                 
                 <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 mb-4 text-left text-xs text-indigo-900 space-y-1">
                     <p class="font-bold text-indigo-700 flex items-center mb-1">
@@ -118,7 +118,7 @@
                     <p class="font-bold text-indigo-700 flex items-center mt-2 mb-1">
                         <i class="fa-solid fa-list-check mr-1.5 text-indigo-600"></i>Recommendation Reasons Criteria (추천 이유 필수 요소):
                     </p>
-                    <p class="text-[11px] text-slate-600">다른 책과 비교, 주제, 완성도, 삽화, 감동 중 <strong>최소 3가지 이상</strong>을 다루어야 합니다.</p>
+                    <p class="text-[11px] text-slate-600">비교/총평, 주제(First,), 감동/완성도(Second,), 삽화(Finally,) 중 <strong>최소 3가지 이상 필수 반영</strong></p>
                 </div>
 
                 <form id="login-form" class="space-y-3">
@@ -144,27 +144,27 @@
             <!-- LEFT: Chat Interface -->
             <div class="flex-1 flex flex-col h-full bg-slate-50 border-r border-slate-200">
                 
-                <!-- Stepper Progress Header -->
+                <!-- Stepper Progress Header (9단계) -->
                 <div class="bg-white border-b border-slate-200 p-3 px-4 shadow-sm flex-shrink-0">
                     <div class="flex justify-between text-xs font-semibold text-slate-500 mb-1.5">
                         <span id="step-indicator-text">Step 1: Book Title (창작 그림책 제목 소개)</span>
-                        <span id="step-percentage">12%</span>
+                        <span id="step-percentage">11%</span>
                     </div>
                     <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200">
-                        <div id="progress-bar-fill" class="bg-indigo-500 h-2.5 rounded-full transition-all duration-500" style="width: 12%"></div>
+                        <div id="progress-bar-fill" class="bg-indigo-500 h-2.5 rounded-full transition-all duration-500" style="width: 11%"></div>
                     </div>
                     <div class="flex justify-between items-center mt-2 text-[11px] font-medium text-slate-400">
-                        <span id="step-badge-1" class="text-indigo-600 font-bold flex items-center"><i class="fa-solid fa-circle-check mr-1"></i>1. Title (책 제목)</span>
-                        <span id="step-badge-2" class="flex items-center"><i class="fa-regular fa-circle mr-1"></i>2. Summary (줄거리)</span>
-                        <span id="step-badge-3" class="flex items-center"><i class="fa-regular fa-circle mr-1"></i>3. Comp & Overall (비교/총평)</span>
-                        <span id="step-badge-4" class="flex items-center"><i class="fa-regular fa-circle mr-1"></i>4. Reasons (주제/감동/삽화)</span>
+                        <span id="step-badge-1" class="text-indigo-600 font-bold flex items-center"><i class="fa-solid fa-circle-check mr-1"></i>1. Title</span>
+                        <span id="step-badge-2" class="flex items-center"><i class="fa-regular fa-circle mr-1"></i>2-4. Summary</span>
+                        <span id="step-badge-3" class="flex items-center"><i class="fa-regular fa-circle mr-1"></i>5. Overall</span>
+                        <span id="step-badge-4" class="flex items-center"><i class="fa-regular fa-circle mr-1"></i>6-9. Reasons</span>
                     </div>
                 </div>
 
                 <!-- Chat History -->
                 <div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar"></div>
 
-                <!-- Hint Toolbar (패턴 빈칸 형식) -->
+                <!-- Hint Toolbar -->
                 <div id="hint-toolbar" class="bg-amber-50 border-t border-amber-200 px-4 py-2 flex items-center justify-between text-xs text-amber-800 flex-shrink-0">
                     <div class="flex items-center space-x-2 overflow-x-auto custom-scrollbar py-1 w-full">
                         <span class="font-bold whitespace-nowrap text-amber-900 flex items-center flex-shrink-0">
@@ -189,7 +189,7 @@
                         </button>
                     </form>
                     <div class="flex justify-between items-center mt-1.5 px-1 text-[11px] text-slate-400">
-                        <span>💡 창작 그림책의 앞뒤 맥락과 어법, 논리성을 분석합니다.</span>
+                        <span>💡 창작 그림책의 맥락과 어법, 철자, 논리성을 엄격히 분석합니다.</span>
                         <span id="char-count">0 characters</span>
                     </div>
                 </div>
@@ -232,9 +232,9 @@
                         </div>
                         <div class="grid grid-cols-2 gap-1 text-[11px]">
                             <span id="badge-criteria-comp" class="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center">비교/총평</span>
-                            <span id="badge-criteria-theme" class="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center">주제/메시지</span>
-                            <span id="badge-criteria-art" class="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center">삽화/그림</span>
-                            <span id="badge-criteria-emotion" class="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center">감동/완성도</span>
+                            <span id="badge-criteria-theme" class="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center">주제(First,)</span>
+                            <span id="badge-criteria-emotion" class="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center">감동(Second,)</span>
+                            <span id="badge-criteria-art" class="bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center">삽화(Finally,)</span>
                         </div>
                     </div>
 
@@ -260,7 +260,7 @@
                         </div>
                     </div>
 
-                    <!-- Section 3 -->
+                    <!-- Section 3: Recommendation Reasons (5문장) -->
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-xs transition-all">
                         <div class="flex items-center justify-between text-xs font-bold text-slate-500 mb-1 border-b border-slate-200 pb-1">
                             <span><i class="fa-solid fa-star text-indigo-400 mr-1"></i>Recommendation Reasons (추천 이유 문단)</span>
@@ -268,9 +268,10 @@
                         </div>
                         <div id="draft-reasons-container" class="space-y-1.5 text-xs text-slate-400 italic">
                             <p id="draft-rec-q1" class="leading-relaxed">• 1) Overall Evaluation (비교 및 전체 총평)</p>
-                            <p id="draft-rec-q2-1" class="leading-relaxed">• 2) Reason 1 (주제/감동/삽화/완성도 중 1)</p>
-                            <p id="draft-rec-q2-2" class="leading-relaxed">• 3) Reason 2 (주제/감동/삽화/완성도 중 2)</p>
-                            <p id="draft-rec-q2-3" class="leading-relaxed">• 4) Reason 3 (주제/감동/삽화/완성도 중 3)</p>
+                            <p id="draft-rec-q2" class="leading-relaxed">• 2) Theme (First, 주제/메시지)</p>
+                            <p id="draft-rec-q3" class="leading-relaxed">• 3) Emotional Impact (Second, 감동/완성도)</p>
+                            <p id="draft-rec-q4" class="leading-relaxed">• 4) Artwork (Finally, 그림/삽화)</p>
+                            <p id="draft-rec-q5" class="leading-relaxed">• 5) Closing (Therefore, 마무리 추천)</p>
                         </div>
                     </div>
 
@@ -331,19 +332,25 @@
                         <p id="report-grammar-status" class="text-slate-600">Checking purpose to-infinitive and reflexive pronouns...</p>
                     </div>
                     <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl text-xs">
-                        <p class="font-bold text-blue-900 mb-1"><i class="fa-solid fa-list-check mr-1"></i> Reasons Aspects</p>
+                        <p class="font-bold text-blue-900 mb-1"><i class="fa-solid fa-list-check mr-1"></i> Reasons Aspects (Min 3/4)</p>
                         <p id="report-criteria-status" class="text-slate-600">Checking recommendation aspects...</p>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-slate-100 p-4 border-t border-slate-200 flex justify-end space-x-3 no-print">
-                <button id="copy-report-btn" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs transition flex items-center">
-                    <i class="fa-solid fa-copy mr-1.5"></i> Copy Text (복사하기)
+            <!-- MODAL ACTION BUTTONS ('다시 하기' 추가) -->
+            <div class="bg-slate-100 p-4 border-t border-slate-200 flex justify-between items-center no-print">
+                <button id="modal-restart-btn" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl font-bold text-xs transition flex items-center">
+                    <i class="fa-solid fa-rotate-right mr-1.5"></i> Restart (다시 하기)
                 </button>
-                <button id="print-report-btn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs transition flex items-center">
-                    <i class="fa-solid fa-print mr-1.5"></i> Print (인쇄하기)
-                </button>
+                <div class="flex space-x-2">
+                    <button id="copy-report-btn" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs transition flex items-center">
+                        <i class="fa-solid fa-copy mr-1.5"></i> Copy Text (복사하기)
+                    </button>
+                    <button id="print-report-btn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs transition flex items-center">
+                        <i class="fa-solid fa-print mr-1.5"></i> Print (인쇄하기)
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -351,12 +358,12 @@
     <script>
         const AppState = {
             studentId: '',
-            currentStep: 1,
+            currentStep: 1, // 1 ~ 9단계
             spellingMistakeCount: 0,
             hasToInfinitive: false,
             hasReflexive: false,
             criteriaMet: { comp: false, theme: false, art: false, emotion: false },
-            drafts: { title: '', summary1: '', summary2: '', summary3: '', rec1: '', rec2: '', rec3: '', rec4: '' }
+            drafts: { title: '', summary1: '', summary2: '', summary3: '', rec1: '', rec2: '', rec3: '', rec4: '', rec5: '' }
         };
 
         const elements = {
@@ -401,13 +408,15 @@
             draftQ3Resolution: document.getElementById('draft-q3-resolution'),
             checkReasons: document.getElementById('check-reasons'),
             draftRecQ1: document.getElementById('draft-rec-q1'),
-            draftRecQ21: document.getElementById('draft-rec-q2-1'),
-            draftRecQ22: document.getElementById('draft-rec-q2-2'),
-            draftRecQ23: document.getElementById('draft-rec-q2-3'),
+            draftRecQ2: document.getElementById('draft-rec-q2'),
+            draftRecQ3: document.getElementById('draft-rec-q3'),
+            draftRecQ4: document.getElementById('draft-rec-q4'),
+            draftRecQ5: document.getElementById('draft-rec-q5'),
             
             viewFinalReportBtn: document.getElementById('view-final-report-btn'),
             finalModal: document.getElementById('final-modal'),
             closeFinalModal: document.getElementById('close-final-modal'),
+            modalRestartBtn: document.getElementById('modal-restart-btn'),
             reportStudentId: document.getElementById('report-student-id'),
             reportTitleText: document.getElementById('report-title-text'),
             reportSummaryText: document.getElementById('report-summary-text'),
@@ -435,18 +444,26 @@
             initTutorChat();
         });
 
-        elements.resetBtn.addEventListener('click', () => {
+        function performReset() {
             AppState.currentStep = 1;
             AppState.spellingMistakeCount = 0;
             AppState.hasToInfinitive = false;
             AppState.hasReflexive = false;
             AppState.criteriaMet = { comp: false, theme: false, art: false, emotion: false };
-            AppState.drafts = { title: '', summary1: '', summary2: '', summary3: '', rec1: '', rec2: '', rec3: '', rec4: '' };
+            AppState.drafts = { title: '', summary1: '', summary2: '', summary3: '', rec1: '', rec2: '', rec3: '', rec4: '', rec5: '' };
             elements.studentIdInput.value = '';
             elements.studentBadge.classList.add('hidden');
             elements.resetBtn.classList.add('hidden');
+            elements.finalModal.classList.add('hidden');
             elements.loginModal.classList.remove('hidden');
             resetDraftNotebookUI();
+        }
+
+        elements.resetBtn.addEventListener('click', performReset);
+        elements.modalRestartBtn.addEventListener('click', () => {
+            if (confirm("정말 처음부터 다시 작성하시겠습니까? (현재 작성된 내용이 초기화됩니다)")) {
+                performReset();
+            }
         });
 
         function getStepDescription(step) {
@@ -456,15 +473,15 @@
                 "Summary 1/3: Character & Setting (주인공 및 배경)",
                 "Summary 2/3: Main Event (주요 사건)",
                 "Summary 3/3: Resolution (전개 및 결말)",
-                "Reason 1: Comparative Evaluation (비교 및 총평)",
-                "Reason 2: Theme or Artwork (주제/삽화)",
-                "Reason 3: Emotional Impact or Completeness (감동/완성도)",
-                "Reason 4: Final Recommendation (종합 추천)"
+                "Reason 1: Comparative Evaluation (비교 및 전체 총평)",
+                "Reason 2: Theme (First, 주제 및 메시지)",
+                "Reason 3: Emotional Impact or Completeness (Second, 감동/완성도)",
+                "Reason 4: Artwork (Finally, 그림 및 삽화)",
+                "Reason 5: Final Recommendation (Therefore, 마무리 추천)"
             ];
             return steps[step] || "Writing Completed";
         }
 
-        // 단계별 질문 및 전용 힌트 사전
         function getStepPromptGuide(step) {
             const prompts = {
                 1: {
@@ -513,30 +530,39 @@
                     ]
                 },
                 6: {
-                    title: "[Step 6] 세부 추천 이유 1: 주제 및 삽화",
-                    eng: "Write a recommendation reason about the Theme or Artwork.",
-                    kor: "직접 그린 그림책의 '주제/메시지(Theme)' 또는 인상적인 '그림/삽화(Artwork)'에 대한 추천 이유를 작성하세요.",
+                    title: "[Step 6] 세부 추천 이유 1: 주제 및 메시지 (First,)",
+                    eng: "Start with 'First,' and write a recommendation reason about the Theme or Message.",
+                    kor: "'First,'로 시작하여 직접 만든 그림책의 '주제나 교훈(Theme)'에 대한 추천 이유를 작성하세요.",
                     hints: [
-                        "First of all, the theme of the story teaches us to ______.",
-                        "One of the best features is the artwork which ______."
+                        "First, the theme of this story teaches us to ______.",
+                        "First, the main message of the book encourages readers to ______."
                     ]
                 },
                 7: {
-                    title: "[Step 7] 세부 추천 이유 2: 감동 요소 및 작품 완성도",
-                    eng: "Write another reason about Emotional Impact or Story Completeness.",
-                    kor: "읽고 난 후의 '감동(Emotional impact)' 또는 스토리의 '완성도(Completeness)'에 대한 추천 이유를 작성하세요.",
+                    title: "[Step 7] 세부 추천 이유 2: 감동 요소 또는 완성도 (Second,)",
+                    eng: "Start with 'Second,' and write about Emotional Impact or Completeness.",
+                    kor: "'Second,'로 시작하여 읽고 난 후의 '감동(Emotional impact)'이나 스토리의 '완성도(Completeness)'에 대해 작성하세요.",
                     hints: [
-                        "Furthermore, the touching story moves readers to ______.",
-                        "Moreover, the high quality of the storyline helps readers to ______."
+                        "Second, the touching story moves readers to ______.",
+                        "Second, the high completeness of the storyline helps readers to ______."
                     ]
                 },
                 8: {
-                    title: "[Step 8] 추천 이유 4: 최종 종합 추천",
-                    eng: "Write a closing recommendation sentence to your readers.",
-                    kor: "친구들과 독자들에게 책을 권하는 마무리 종합 추천 문장을 작성하세요.",
+                    title: "[Step 8] 세부 추천 이유 3: 그림 및 삽화 (Finally,)",
+                    eng: "Start with 'Finally,' and write about Artwork or Illustration.",
+                    kor: "'Finally,'로 시작하여 직접 그린 그림책의 '그림/삽화(Artwork)'가 주는 인상적인 특징을 작성하세요.",
                     hints: [
-                        "For these reasons, I strongly recommend this book to ______.",
-                        "In conclusion, reading this book will help yourselves to ______."
+                        "Finally, the beautiful artwork expresses ______ to help ______.",
+                        "Finally, the colorful illustrations make the story ______."
+                    ]
+                },
+                9: {
+                    title: "[Step 9] 추천 이유 5: 마무리 종합 추천 (Therefore,)",
+                    eng: "Start with 'Therefore,' and write a closing recommendation sentence to your readers.",
+                    kor: "'Therefore,'로 시작하여 독자들에게 책을 권하는 마무리 종합 추천 문장을 작성하세요.",
+                    hints: [
+                        "Therefore, I strongly recommend this book to anyone who wants to ______.",
+                        "Therefore, reading this book will help yourselves to ______."
                     ]
                 }
             };
@@ -618,7 +644,7 @@
             loadingBubble.innerHTML = `
                 <div class="max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed chat-bubble-tutor flex items-center space-x-2 text-indigo-600">
                     <i class="fa-solid fa-spinner fa-spin"></i>
-                    <span>Gemini AI가 문맥과 어법, 논리성을 분석 중입니다...</span>
+                    <span>Gemini AI가 문맥과 어법, 접속사, 논리성을 분석 중입니다...</span>
                 </div>
             `;
             elements.chatWindow.appendChild(loadingBubble);
@@ -669,37 +695,36 @@
                 if (evalResult.detectedGrammar?.hasToInfinitive) AppState.hasToInfinitive = true;
                 if (evalResult.detectedGrammar?.hasReflexive) AppState.hasReflexive = true;
 
-                if (evalResult.detectedCriteria?.comp) AppState.criteriaMet.comp = true;
-                if (evalResult.detectedCriteria?.theme) AppState.criteriaMet.theme = true;
-                if (evalResult.detectedCriteria?.art) AppState.criteriaMet.art = true;
-                if (evalResult.detectedCriteria?.emotion) AppState.criteriaMet.emotion = true;
+                // 추천 요소 수집
+                if (evalResult.detectedCriteria?.comp || AppState.currentStep === 5) AppState.criteriaMet.comp = true;
+                if (evalResult.detectedCriteria?.theme || AppState.currentStep === 6) AppState.criteriaMet.theme = true;
+                if (evalResult.detectedCriteria?.emotion || AppState.currentStep === 7) AppState.criteriaMet.emotion = true;
+                if (evalResult.detectedCriteria?.art || AppState.currentStep === 8) AppState.criteriaMet.art = true;
                 updateGrammarChecklistUI();
 
                 const stepDraftMap = {
                     1: 'title', 2: 'summary1', 3: 'summary2', 4: 'summary3',
-                    5: 'rec1', 6: 'rec2', 7: 'rec3', 8: 'rec4'
+                    5: 'rec1', 6: 'rec2', 7: 'rec3', 8: 'rec4', 9: 'rec5'
                 };
                 AppState.drafts[stepDraftMap[AppState.currentStep]] = userText;
 
                 const nextStepNumber = AppState.currentStep + 1;
                 let fullFeedback = evalResult.feedback;
 
-                // 다음 단계 질문 자동 보완
-                if (nextStepNumber <= 8 && !fullFeedback.includes(`Step ${nextStepNumber}`)) {
+                if (nextStepNumber <= 9 && !fullFeedback.includes(`Step ${nextStepNumber}`)) {
                     const nextGuide = getStepPromptGuide(nextStepNumber);
                     if (nextGuide) {
                         fullFeedback += `\n\n---\n### ${nextGuide.title}\n${nextGuide.eng}\n(${nextGuide.kor})`;
                     }
-                } else if (nextStepNumber > 8 && !fullFeedback.includes('View Final Report')) {
-                    fullFeedback += `\n\n🎉 모든 문장을 완성했습니다! 우측 노트의 **[View Final Report]** 버튼을 눌러 최종 결과를 확인하세요.`;
+                } else if (nextStepNumber > 9 && !fullFeedback.includes('View Final Report')) {
+                    fullFeedback += `\n\n🎉 9단계 추천사 작성을 모두 완료했습니다! 우측의 **[View Final Report]** 버튼을 눌러 완성된 추천사 보고서를 확인하세요.`;
                 }
 
                 addChatMessage('tutor', fullFeedback);
 
-                // [중요 수정] 다음 단계 힌트 칩 즉시 강제 교체
-                if (nextStepNumber <= 8) {
+                // 다음 단계 전용 힌트 칩으로 교체
+                if (nextStepNumber <= 9) {
                     const nextGuide = getStepPromptGuide(nextStepNumber);
-                    // AI가 다음 단계용 힌트를 올바르게 주었으면 그것을 쓰고, 이전 단계 힌트를 잘못 주었으면 사전정의된 다음 단계 힌트 강제 적용
                     if (evalResult.suggestedHints && evalResult.suggestedHints.length > 0 && !evalResult.suggestedHints[0].includes('called') && !evalResult.suggestedHints[0].includes('titled')) {
                         updateHints(evalResult.suggestedHints);
                     } else if (nextGuide) {
@@ -721,11 +746,11 @@
         }
 
         function advanceStep() {
-            if (AppState.currentStep < 8) {
+            if (AppState.currentStep < 9) {
                 AppState.currentStep++;
                 updateStepProgress(AppState.currentStep);
             } else {
-                updateStepProgress(8);
+                updateStepProgress(9);
                 document.getElementById('notebook-status-badge').textContent = "Completed!";
                 document.getElementById('notebook-status-badge').className = "text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full";
             }
@@ -733,7 +758,7 @@
         }
 
         function updateStepProgress(step) {
-            const percentage = Math.round((step / 8) * 100);
+            const percentage = Math.round((step / 9) * 100);
             elements.stepIndicatorText.textContent = `Step ${step}: ${getStepDescription(step)}`;
             elements.stepPercentage.textContent = `${percentage}%`;
             elements.progressBarFill.style.width = `${percentage}%`;
@@ -756,8 +781,8 @@
 
             if (AppState.criteriaMet.comp) elements.badgeComp.className = "bg-blue-600 text-white font-bold px-2 py-0.5 rounded text-center";
             if (AppState.criteriaMet.theme) elements.badgeTheme.className = "bg-blue-600 text-white font-bold px-2 py-0.5 rounded text-center";
-            if (AppState.criteriaMet.art) elements.badgeArt.className = "bg-blue-600 text-white font-bold px-2 py-0.5 rounded text-center";
             if (AppState.criteriaMet.emotion) elements.badgeEmotion.className = "bg-blue-600 text-white font-bold px-2 py-0.5 rounded text-center";
+            if (AppState.criteriaMet.art) elements.badgeArt.className = "bg-blue-600 text-white font-bold px-2 py-0.5 rounded text-center";
         }
 
         function updateNotebookDraftUI() {
@@ -773,10 +798,11 @@
                 elements.checkSummary.className = "fa-solid fa-circle-check text-emerald-500";
             }
             if (AppState.drafts.rec1) elements.draftRecQ1.textContent = `• 1) ${AppState.drafts.rec1}`;
-            if (AppState.drafts.rec2) elements.draftRecQ21.textContent = `• 2) ${AppState.drafts.rec2}`;
-            if (AppState.drafts.rec3) elements.draftRecQ22.textContent = `• 3) ${AppState.drafts.rec3}`;
-            if (AppState.drafts.rec4) {
-                elements.draftRecQ23.textContent = `• 4) ${AppState.drafts.rec4}`;
+            if (AppState.drafts.rec2) elements.draftRecQ2.textContent = `• 2) ${AppState.drafts.rec2}`;
+            if (AppState.drafts.rec3) elements.draftRecQ3.textContent = `• 3) ${AppState.drafts.rec3}`;
+            if (AppState.drafts.rec4) elements.draftRecQ4.textContent = `• 4) ${AppState.drafts.rec4}`;
+            if (AppState.drafts.rec5) {
+                elements.draftRecQ5.textContent = `• 5) ${AppState.drafts.rec5}`;
                 elements.checkReasons.className = "fa-solid fa-circle-check text-emerald-500";
             }
         }
@@ -792,9 +818,10 @@
             elements.checkSummary.className = "fa-solid fa-circle-check text-slate-300";
 
             elements.draftRecQ1.textContent = "• 1) Overall Evaluation (비교 및 전체 총평)";
-            elements.draftRecQ21.textContent = "• 2) Reason 1 (주제/감동/삽화/완성도 중 1)";
-            elements.draftRecQ22.textContent = "• 3) Reason 2 (주제/감동/삽화/완성도 중 2)";
-            elements.draftRecQ23.textContent = "• 4) Reason 3 (주제/감동/삽화/완성도 중 3)";
+            elements.draftRecQ2.textContent = "• 2) Theme (First, 주제/메시지)";
+            elements.draftRecQ3.textContent = "• 3) Emotional Impact (Second, 감동/완성도)";
+            elements.draftRecQ4.textContent = "• 4) Artwork (Finally, 그림/삽화)";
+            elements.draftRecQ5.textContent = "• 5) Closing (Therefore, 마무리 추천)";
             elements.checkReasons.className = "fa-solid fa-circle-check text-slate-300";
 
             elements.checkToInfinitive.className = "flex items-center text-slate-400 transition-all";
@@ -804,8 +831,8 @@
 
             elements.badgeComp.className = "bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center";
             elements.badgeTheme.className = "bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center";
-            elements.badgeArt.className = "bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center";
             elements.badgeEmotion.className = "bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center";
+            elements.badgeArt.className = "bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center";
         }
 
         elements.speakBtn.addEventListener('click', () => {
@@ -825,6 +852,7 @@
             }
         });
 
+        // 최종 보고서 모달 보기 (추천 이유 4가지 중 3가지 필수 검증)
         elements.viewFinalReportBtn.addEventListener('click', () => {
             elements.reportStudentId.textContent = AppState.studentId || "10101";
             elements.reportTitleText.textContent = AppState.drafts.title || "Not written";
@@ -832,7 +860,7 @@
             const summaryParts = [AppState.drafts.summary1, AppState.drafts.summary2, AppState.drafts.summary3].filter(Boolean);
             elements.reportSummaryText.textContent = summaryParts.length > 0 ? summaryParts.join(' ') : "Summary not completed yet.";
 
-            const reasonParts = [AppState.drafts.rec1, AppState.drafts.rec2, AppState.drafts.rec3, AppState.drafts.rec4].filter(Boolean);
+            const reasonParts = [AppState.drafts.rec1, AppState.drafts.rec2, AppState.drafts.rec3, AppState.drafts.rec4, AppState.drafts.rec5].filter(Boolean);
             elements.reportReasonsText.textContent = reasonParts.length > 0 ? reasonParts.join(' ') : "Recommendation reasons not completed yet.";
 
             const grammarOk = AppState.hasToInfinitive && AppState.hasReflexive;
@@ -843,7 +871,7 @@
             const countCriteria = Object.values(AppState.criteriaMet).filter(Boolean).length;
             elements.reportCriteriaStatus.textContent = countCriteria >= 3 
                 ? `✅ 추천 이유 필수 요소 충족 (${countCriteria}/4개 항목 반영됨).`
-                : `⚠️ 현재 ${countCriteria}/3개 항목만 반영되었습니다. 주제, 삽화, 감동, 비교 요소를 더 포함해 보세요.`;
+                : `⚠️ 필수 조건 미달: 추천 이유 4가지 요소 중 3가지 이상을 반드시 반영해야 합니다. (현재: ${countCriteria}/3개)`;
 
             elements.finalModal.classList.remove('hidden');
         });
@@ -853,7 +881,7 @@
         });
 
         elements.copyReportBtn.addEventListener('click', () => {
-            const fullReport = `[Creative Picture Book Recommendation Report]\nStudent ID: ${AppState.studentId}\nTitle: ${AppState.drafts.title}\n\n1. Summary:\n${AppState.drafts.summary1} ${AppState.drafts.summary2} ${AppState.drafts.summary3}\n\n2. Recommendation Reasons:\n${AppState.drafts.rec1} ${AppState.drafts.rec2} ${AppState.drafts.rec3} ${AppState.drafts.rec4}`;
+            const fullReport = `[Creative Picture Book Recommendation Report]\nStudent ID: ${AppState.studentId}\nTitle: ${AppState.drafts.title}\n\n1. Summary:\n${AppState.drafts.summary1} ${AppState.drafts.summary2} ${AppState.drafts.summary3}\n\n2. Recommendation Reasons:\n${AppState.drafts.rec1} ${AppState.drafts.rec2} ${AppState.drafts.rec3} ${AppState.drafts.rec4} ${AppState.drafts.rec5}`;
             
             const textarea = document.createElement('textarea');
             textarea.value = fullReport;
