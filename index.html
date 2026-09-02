@@ -198,7 +198,7 @@
                         </button>
                     </form>
                     <div class="flex justify-between items-center mt-1.5 px-1 text-[11px] text-slate-400">
-                        <span>💡 Gemini AI가 철자, 어법, 내용 적절성 및 논리성을 종합 분석합니다.</span>
+                        <span>💡 Gemini AI가 철자, 어법, 내용 적절성 및 일관성을 종합 분석합니다.</span>
                         <span id="char-count">0 characters</span>
                     </div>
                 </div>
@@ -370,12 +370,9 @@
     </div>
 
     <script>
-        /**
-         * Global Application State
-         */
         const AppState = {
             studentId: '',
-            currentStep: 1, // Steps 1 to 8
+            currentStep: 1,
             spellingMistakeCount: 0,
             hasToInfinitive: false,
             hasReflexive: false,
@@ -397,7 +394,6 @@
             }
         };
 
-        // DOM Element Cache
         const elements = {
             loginModal: document.getElementById('login-modal'),
             loginForm: document.getElementById('login-form'),
@@ -457,12 +453,11 @@
             printReportBtn: document.getElementById('print-report-btn')
         };
 
-        // Initialize Login Form Handler
+        // 학생 학번 로그인 처리
         elements.loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const studentIdVal = elements.studentIdInput.value.trim();
             
-            // Validate 5 digits
             if (!/^\d{5}$/.test(studentIdVal)) {
                 elements.loginErrorMsg.classList.remove('hidden');
                 elements.studentIdInput.focus();
@@ -473,7 +468,6 @@
             AppState.studentId = studentIdVal;
             elements.displayStudentId.textContent = studentIdVal;
             
-            // UI Transition
             elements.loginModal.classList.add('hidden');
             elements.studentBadge.classList.remove('hidden');
             elements.resetBtn.classList.remove('hidden');
@@ -481,7 +475,7 @@
             initTutorChat();
         });
 
-        // Reset Button
+        // 초기화 버튼 처리
         elements.resetBtn.addEventListener('click', () => {
             AppState.currentStep = 1;
             AppState.spellingMistakeCount = 0;
@@ -575,7 +569,6 @@ What is the title of the picture book you would like to recommend?
             const content = document.createElement('div');
             content.className = `max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed ${sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-tutor'}`;
             
-            // Format markdown-style header & bolding
             let formattedText = text
                 .replace(/### (.*)/g, '<h4 class="font-bold text-indigo-700 text-sm mt-1 mb-1">$1</h4>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -620,7 +613,7 @@ What is the title of the picture book you would like to recommend?
             elements.userInput.value = '';
             updateCharCount();
 
-            // Check if student asks for help
+            // 도움 요청 감지
             if (isHelpRequest(text)) {
                 const guide = getStepCorrectSpellingGuide(AppState.currentStep);
                 addChatMessage('tutor', `🙋‍♂️ Please check the spelling and patterns below:\n(철자 및 작성 패턴 가이드를 확인해 보세요!)\n\n${guide.text}`);
@@ -628,20 +621,20 @@ What is the title of the picture book you would like to recommend?
                 return;
             }
 
-            // Korean input detection
+            // 한글 입력 감지
             if (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(text)) {
                 addChatMessage('tutor', `⚠️ Please write your sentence in English.\n(한국어로 입력하셨네요! 영작문 튜터이므로 직접 영어 문장으로 작성해 주세요. 도움이 필요하면 "도움" 또는 "철자 모름"을 입력하세요.)`);
                 return;
             }
 
-            // Word count validation (min 7 words)
+            // 단어 수 검증 (최소 7단어)
             const words = text.split(/\s+/).filter(w => w.length > 0);
             if (words.length < 7) {
                 addChatMessage('tutor', `⚠️ Your sentence is too short (${words.length} words).\n(작성하신 문장의 길이가 7단어 미만으로 너무 짧습니다. 최소 **7단어 이상**의 완전한 영어 문장으로 작성해 주세요!)`);
                 return;
             }
 
-            // Call Gemini 3.1 Flash-Lite AI evaluation
+            // Gemini API 호출을 통한 종합 채점 및 피드백
             handleTutorResponse(text);
         });
 
@@ -650,11 +643,8 @@ What is the title of the picture book you would like to recommend?
             return lower.includes('철자') || lower.includes('모름') || lower.includes('help') || lower.includes('도움');
         }
 
-        /**
-         * Real-time AI Evaluation via api/generate.js
-         */
+        // Gemini AI 백엔드 통신 및 피드백 처리
         async function handleTutorResponse(userText) {
-            // 로딩 상태 표시
             const loadingBubble = document.createElement('div');
             loadingBubble.id = 'ai-loading-bubble';
             loadingBubble.className = 'flex justify-start animate-fade-in';
@@ -684,7 +674,7 @@ What is the title of the picture book you would like to recommend?
                 document.getElementById('ai-loading-bubble')?.remove();
 
                 if (!response.ok || evalResult.error) {
-                    addChatMessage('tutor', `⚠️ 검토 중 오류가 발생했습니다. (${evalResult.error || '네트워크 오류'}) 다시 시도해 주세요.`);
+                    addChatMessage('tutor', `⚠️ 검토 중 오류가 발생했습니다. (${evalResult.error || '네트워크 오류'}) 잠시 후 다시 시도해 주세요.`);
                     return;
                 }
 
@@ -701,7 +691,7 @@ What is the title of the picture book you would like to recommend?
                     return;
                 }
 
-                // 2. 합격 판정 시 문법 및 추천 요소 갱신
+                // 2. 합격 판정 시 문법 및 추천 요소 체크리스트 갱신
                 AppState.spellingMistakeCount = 0;
                 if (evalResult.detectedGrammar?.hasToInfinitive) AppState.hasToInfinitive = true;
                 if (evalResult.detectedGrammar?.hasReflexive) AppState.hasReflexive = true;
@@ -719,7 +709,7 @@ What is the title of the picture book you would like to recommend?
                 };
                 AppState.drafts[stepDraftMap[AppState.currentStep]] = userText;
 
-                // 성공 메시지 및 힌트 갱신
+                // 성공 메시지 출력 및 다음 패턴 힌트 제공
                 addChatMessage('tutor', evalResult.feedback);
                 if (evalResult.suggestedHints && evalResult.suggestedHints.length > 0) {
                     updateHints(evalResult.suggestedHints);
@@ -729,7 +719,7 @@ What is the title of the picture book you would like to recommend?
 
             } catch (err) {
                 document.getElementById('ai-loading-bubble')?.remove();
-                addChatMessage('tutor', `⚠️ 서버와 연결할 수 없습니다. 배포 환경과 API 설정을 확인해 주세요.`);
+                addChatMessage('tutor', `⚠️ 서버와 연결할 수 없습니다. Vercel 배포 환경과 API 설정을 확인해 주세요.`);
                 console.error(err);
             } finally {
                 elements.sendBtn.disabled = false;
@@ -754,7 +744,6 @@ What is the title of the picture book you would like to recommend?
             elements.stepPercentage.textContent = `${percentage}%`;
             elements.progressBarFill.style.width = `${percentage}%`;
 
-            // Step Badge Highlight
             elements.stepBadge1.className = step >= 1 ? "text-indigo-600 font-bold flex items-center" : "flex items-center";
             elements.stepBadge2.className = step >= 2 ? "text-indigo-600 font-bold flex items-center" : "flex items-center";
             elements.stepBadge3.className = step >= 5 ? "text-indigo-600 font-bold flex items-center" : "flex items-center";
@@ -825,7 +814,7 @@ What is the title of the picture book you would like to recommend?
             elements.badgeEmotion.className = "bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center";
         }
 
-        // Voice Input Web Speech API Fallback
+        // 음성 인식 Web Speech API
         elements.speakBtn.addEventListener('click', () => {
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -848,7 +837,7 @@ What is the title of the picture book you would like to recommend?
             }
         });
 
-        // Final Report Modal Actions
+        // 최종 보고서 모달 보기
         elements.viewFinalReportBtn.addEventListener('click', () => {
             elements.reportStudentId.textContent = AppState.studentId || "10101";
             elements.reportTitleText.textContent = AppState.drafts.title || "Not written";
@@ -859,7 +848,6 @@ What is the title of the picture book you would like to recommend?
             const reasonParts = [AppState.drafts.rec1, AppState.drafts.rec2, AppState.drafts.rec3, AppState.drafts.rec4].filter(Boolean);
             elements.reportReasonsText.textContent = reasonParts.length > 0 ? reasonParts.join(' ') : "Recommendation reasons not completed yet.";
 
-            // Status checks
             const grammarOk = AppState.hasToInfinitive && AppState.hasReflexive;
             elements.reportGrammarStatus.textContent = grammarOk 
                 ? "✅ Both 'Purpose To-Infinitive' and 'Reflexive Pronoun' are successfully included."
