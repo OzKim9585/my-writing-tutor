@@ -35,48 +35,47 @@ export default async function handler(req, res) {
 
 [작성 맥락]
 - 이전까지 작성된 내용: ${JSON.stringify(drafts || {})}
-- 현재 작성 단계: Step ${step} (${stepDescription || ''})
+- 방금 학생이 완료한 단계: Step ${step} (${stepDescription || ''})
 - 학생 제출 문장: "${text}"
+- 합격 시 다음 진행할 단계: Step ${nextStep}
 
 [1단계: 의도(intent) 파악]
 - "help": 힌트, 단어, 철자, 작성 방법을 묻거나 조언을 요청하는 경우
-- "submission": 영어 문장을 실제로 작성하여 제출한 경우 ('help' 단어가 영작문에 쓰였어도 submission으로 분류)
+- "submission": 영어 문장을 실제로 작성하여 제출한 경우
 
 [2단계: 평가 및 피드백 규칙]
 1. intent가 "help"인 경우:
    - passed: false, issueType: "도움말 안내"
-   - 한국어로 친절한 문장 구조 팁 및 조언 제공
-   - suggestedHints는 반드시 '______' 빈칸이 포함된 패턴 2개 제공
+   - feedback: 현재 Step ${step}을 작성하기 위한 친절한 조언
+   - suggestedHints: 현재 Step ${step}에서 사용할 '______' 빈칸 포함 패턴 2개 제공
 
 2. intent가 "submission"인 경우:
    - 합격(passed: true) 기준:
-     1) Step ${step}의 지시 사항에 부합하는 내용인가?
-     2) 앞 단계들의 맥락(등장인물, 배경 등)과 모순 없이 자연스럽게 이어지는가?
+     1) Step ${step}의 지시 사항에 부합하는가?
+     2) 앞 단계들의 맥락과 모순 없이 자연스럽게 연결되는가?
      3) 철자 및 문법이 올바르고 최소 7단어 이상의 완결된 문장인가?
    - 주의사항:
-     * 목적의 to부정사, 재귀대명사, 추천요소는 8문장 중 어디서든 쓰면 되므로 이번 문장에 없다고 탈락시키지 마세요.
-     * 이번 문장에 실제 쓰였는지 여부만 detectedGrammar와 detectedCriteria에 true/false로 표시하세요.
-   - 피드백 작성 규칙 (매우 중요):
-     * **합격(passed: true) 시:** 학생 문장에 대한 구체적 칭찬을 작성한 후, 문단 아래에 반드시 다음과 같이 다음 단계 안내와 질문을 포함해야 합니다:
-       ${nextStep <= 8 ? `
-       형식 예시:
-       칭찬 내용 한두 문장.
-       
-       ---
-       ### [Step ${nextStep}] 다음 단계 제목
-       ${stepQuestions[nextStep] || ''}
-       ` : `축하 메시지와 함께 우측의 [View Final Report] 버튼을 눌러 최종 결과를 확인하라는 안내 문구.`}
-     * **불합격(passed: false) 시:** 무엇이 어색하거나 틀렸는지 친절히 설명하고, 학생 창작 이야기 맥락에 맞춘 수정 방향을 알려주세요. (다음 단계 질문 포함 금지)
-
-[3단계: 힌트 작성 규칙]
-- suggestedHints에는 완성된 문장을 주지 마시고, 학생이 단어를 채워 넣을 수 있도록 **반드시 '______' 빈칸이 포함된 문장 패턴 2개**를 제공하세요.
+     * to부정사, 재귀대명사, 추천요소는 전체 8문장 중 어디서든 쓰면 되므로 이번 문장에 없다고 탈락시키지 마세요.
+     * 이번 문장에 실제 쓰였는지만 detectedGrammar와 detectedCriteria에 true/false로 표시하세요.
+   - 피드백 및 힌트 작성 규칙 (매우 중요):
+     * **합격(passed: true) 시:** 
+       - feedback에는 학생 문장에 대한 칭찬과 함께 다음 단계 안내를 적어주세요.
+         ${nextStep <= 8 ? `
+         ---
+         ### [Step ${nextStep}] 다음 단계 안내
+         ${stepQuestions[nextStep] || ''}
+         ` : `모든 작성을 완료했다는 축하 인사.`}
+       - **suggestedHints는 반드시 '다음 단계(Step ${nextStep})'에서 학생이 쓸 수 있는 '______' 빈칸 포함 문장 패턴 2개를 제공해야 합니다.** (방금 끝낸 Step ${step}의 힌트를 주지 마세요!)
+     * **불합격(passed: false) 시:** 
+       - feedback에는 무엇이 틀렸는지 친절히 설명하고 수정 방향을 알려주세요.
+       - suggestedHints에는 현재 단계(Step ${step})를 다시 고쳐 쓸 때 참고할 '______' 빈칸 포함 패턴 2개를 제공하세요.
 
 반드시 마크다운 기호 없이 순수한 JSON 포맷으로만 응답하세요:
 {
   "intent": "submission" 또는 "help",
   "passed": true 또는 false,
   "issueType": "오류 유형 (탈락 시 기재)",
-  "feedback": "한국어 피드백 (합격 시 다음 단계 질문 반드시 포함)",
+  "feedback": "한국어 피드백 (합격 시 다음 단계 질문 포함)",
   "detectedGrammar": {
     "hasToInfinitive": false,
     "hasReflexive": false
@@ -105,7 +104,6 @@ export default async function handler(req, res) {
         );
 
         const data = await response.json();
-
         if (!response.ok) {
             console.error('Gemini API Error:', data);
             return res.status(500).json({ error: 'Gemini API 호출에 실패했습니다.' });
@@ -113,9 +111,7 @@ export default async function handler(req, res) {
 
         const rawText = data.candidates[0].content.parts[0].text;
         const cleanedJson = rawText.replace(/```json|```/g, '').trim();
-        const result = JSON.parse(cleanedJson);
-
-        return res.status(200).json(result);
+        return res.status(200).json(JSON.parse(cleanedJson));
 
     } catch (error) {
         console.error('Server Error:', error);
