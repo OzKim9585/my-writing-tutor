@@ -198,7 +198,7 @@
                         </button>
                     </form>
                     <div class="flex justify-between items-center mt-1.5 px-1 text-[11px] text-slate-400">
-                        <span>💡 Gemini AI가 철자, 어법, 내용 적절성 및 일관성을 종합 분석합니다.</span>
+                        <span>💡 Gemini AI가 철자, 어법, 내용 적절성 및 논리성을 종합 분석합니다.</span>
                         <span id="char-count">0 characters</span>
                     </div>
                 </div>
@@ -453,7 +453,7 @@
             printReportBtn: document.getElementById('print-report-btn')
         };
 
-        // 학생 학번 로그인 처리
+        // 학생 학번 로그인 처리[cite: 1]
         elements.loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const studentIdVal = elements.studentIdInput.value.trim();
@@ -475,7 +475,7 @@
             initTutorChat();
         });
 
-        // 초기화 버튼 처리
+        // 초기화 버튼 처리[cite: 1]
         elements.resetBtn.addEventListener('click', () => {
             AppState.currentStep = 1;
             AppState.spellingMistakeCount = 0;
@@ -517,8 +517,8 @@
                     hints: ["The main character of this book is ______ who lives in ______.", "The story takes place in ______ where ______ lives."]
                 },
                 3: {
-                    text: `Please check the main event sentence patterns:\n(사건 발생 및 목적을 나타내는 표현을 확인하세요.)\n\n• "He happened to find an orphan girl to protect her during the war."\n• "She tried hard to challenge herself to overcome the difficulty."`,
-                    hints: ["One day, he happened to ______ to help ______.", "She tries hard to protect ______ by herself."]
+                    text: `Please check the main event sentence patterns:\n(사건 발생 및 목적을 나타내는 표현을 확인하세요.)\n\n• "He happened to find an orphan girl to protect her during the war."\n• "The tree gave everything she had to make the boy happy."`,
+                    hints: ["One day, he happened to ______ to help ______.", "She tried hard to protect ______ by herself."]
                 },
                 4: {
                     text: `Please check the resolution sentence patterns:\n(이야기의 전개와 결말 패턴을 참고해 보세요.)\n\n• "A long time later, they met again to share their wonderful memories."\n• "Finally, the main character overcomes hardship to achieve his dream."`,
@@ -613,7 +613,7 @@ What is the title of the picture book you would like to recommend?
             elements.userInput.value = '';
             updateCharCount();
 
-            // 도움 요청 감지
+            // 개선된 도움 요청 감지: 문장 내 'help' 동사와 실제 질문 분리[cite: 1]
             if (isHelpRequest(text)) {
                 const guide = getStepCorrectSpellingGuide(AppState.currentStep);
                 addChatMessage('tutor', `🙋‍♂️ Please check the spelling and patterns below:\n(철자 및 작성 패턴 가이드를 확인해 보세요!)\n\n${guide.text}`);
@@ -621,26 +621,32 @@ What is the title of the picture book you would like to recommend?
                 return;
             }
 
-            // 한글 입력 감지
+            // 한글 입력 감지[cite: 1]
             if (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(text)) {
                 addChatMessage('tutor', `⚠️ Please write your sentence in English.\n(한국어로 입력하셨네요! 영작문 튜터이므로 직접 영어 문장으로 작성해 주세요. 도움이 필요하면 "도움" 또는 "철자 모름"을 입력하세요.)`);
                 return;
             }
 
-            // 단어 수 검증 (최소 7단어)
+            // 단어 수 검증 (최소 7단어)[cite: 1]
             const words = text.split(/\s+/).filter(w => w.length > 0);
             if (words.length < 7) {
                 addChatMessage('tutor', `⚠️ Your sentence is too short (${words.length} words).\n(작성하신 문장의 길이가 7단어 미만으로 너무 짧습니다. 최소 **7단어 이상**의 완전한 영어 문장으로 작성해 주세요!)`);
                 return;
             }
 
-            // Gemini API 호출을 통한 종합 채점 및 피드백
+            // Gemini API 호출 채점
             handleTutorResponse(text);
         });
 
+        // 4단어 이하의 짧은 요청일 때만 도움말로 인식[cite: 1]
         function isHelpRequest(text) {
-            const lower = text.toLowerCase();
-            return lower.includes('철자') || lower.includes('모름') || lower.includes('help') || lower.includes('도움');
+            const trimmed = text.trim().toLowerCase();
+            const words = trimmed.split(/\s+/).filter(w => w.length > 0);
+            if (words.length <= 4) {
+                if (/\b(help|sos)\b/i.test(trimmed)) return true;
+                if (trimmed.includes('도움') || trimmed.includes('철자') || trimmed.includes('모름')) return true;
+            }
+            return false;
         }
 
         // Gemini AI 백엔드 통신 및 피드백 처리
@@ -678,7 +684,7 @@ What is the title of the picture book you would like to recommend?
                     return;
                 }
 
-                // 1. 기준 미달 판정 (철자/문법/내용/논리 부족)
+                // 1. 기준 미달 판정 (철자/문법/내용/논리 부족)[cite: 1]
                 if (!evalResult.passed) {
                     AppState.spellingMistakeCount++;
                     let hintMsg = "";
@@ -691,7 +697,7 @@ What is the title of the picture book you would like to recommend?
                     return;
                 }
 
-                // 2. 합격 판정 시 문법 및 추천 요소 체크리스트 갱신
+                // 2. 합격 판정 시 문법 및 추천 요소 체크리스트 갱신[cite: 1]
                 AppState.spellingMistakeCount = 0;
                 if (evalResult.detectedGrammar?.hasToInfinitive) AppState.hasToInfinitive = true;
                 if (evalResult.detectedGrammar?.hasReflexive) AppState.hasReflexive = true;
@@ -702,14 +708,14 @@ What is the title of the picture book you would like to recommend?
                 if (evalResult.detectedCriteria?.emotion) AppState.criteriaMet.emotion = true;
                 updateGrammarChecklistUI();
 
-                // 초안 저장
+                // 초안 저장[cite: 1]
                 const stepDraftMap = {
                     1: 'title', 2: 'summary1', 3: 'summary2', 4: 'summary3',
                     5: 'rec1', 6: 'rec2', 7: 'rec3', 8: 'rec4'
                 };
                 AppState.drafts[stepDraftMap[AppState.currentStep]] = userText;
 
-                // 성공 메시지 출력 및 다음 패턴 힌트 제공
+                // 성공 메시지 출력 및 다음 패턴 힌트 제공[cite: 1]
                 addChatMessage('tutor', evalResult.feedback);
                 if (evalResult.suggestedHints && evalResult.suggestedHints.length > 0) {
                     updateHints(evalResult.suggestedHints);
@@ -814,7 +820,7 @@ What is the title of the picture book you would like to recommend?
             elements.badgeEmotion.className = "bg-slate-100 text-slate-400 px-2 py-0.5 rounded text-center";
         }
 
-        // 음성 인식 Web Speech API
+        // 음성 인식 Web Speech API[cite: 1]
         elements.speakBtn.addEventListener('click', () => {
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -837,7 +843,7 @@ What is the title of the picture book you would like to recommend?
             }
         });
 
-        // 최종 보고서 모달 보기
+        // 최종 보고서 모달 보기[cite: 1]
         elements.viewFinalReportBtn.addEventListener('click', () => {
             elements.reportStudentId.textContent = AppState.studentId || "10101";
             elements.reportTitleText.textContent = AppState.drafts.title || "Not written";
