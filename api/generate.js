@@ -15,49 +15,68 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'text 필드가 필요합니다.' });
     }
 
+    const nextStep = Number(step) + 1;
+
+    const stepQuestions = {
+        1: "추천하고 싶은 창작 그림책의 제목을 포함하여 7단어 이상의 완결된 한 문장으로 소개해 보세요. (Introduce your picture book title.)",
+        2: "주인공은 누구이며 어떤 배경/장소에서 일어나는 이야기인가요? (Who is the main character, and where/when does the story take place?)",
+        3: "주인공에게 어떤 중심 사건이나 도전 과제가 생기나요? (What main event, challenge, or conflict happens to the protagonist?)",
+        4: "이야기는 어떻게 전개되며 어떤 결말을 맺나요? (How does the story develop, and how is it resolved in the end?)",
+        5: "'Compared to...' 또는 'Unlike...'를 사용하여 다른 책들과 비교한 전체 총평을 한 문장으로 써보세요. (Compare this book with others and write an overall evaluation.)",
+        6: "책의 '주제/교훈(Theme)' 또는 인상적인 '삽화/그림(Artwork)'에 대한 추천 이유를 작성하세요. (Write a recommendation reason about the Theme or Artwork.)",
+        7: "책을 읽고 난 후의 '감동(Emotional impact)' 또는 스토리의 '완성도(Completeness)'에 대한 추천 이유를 작성하세요. (Write another reason about Emotional Impact or Story Completeness.)",
+        8: "친구들과 독자들에게 책을 권하는 마무리 종합 추천 문장을 작성하세요. (Write a closing recommendation sentence to your readers.)"
+    };
+
     const prompt = `
 당신은 중학생을 위한 친절하고 전문적인 영어 글쓰기 튜터입니다.
-이 과제에서 다루는 책은 기존 출판물이 아닌 **"학생들이 직접 만든 창작 그림책"**입니다.
-따라서 시중 서적의 사전 지식을 기준으로 판단하지 마시고, 오직 학생이 지금까지 단계별로 작성한 내용(drafts)만을 유일한 원작 줄거리이자 배경 맥락으로 삼아야 합니다.
+학생들이 시중에 없는 **"자신만의 창작 그림책"**을 직접 만들고 추천사를 작성하고 있습니다.
+오직 학생이 지금까지 단계별로 작성한 내용(drafts)만을 유일한 이야기 배경 및 맥락으로 간주하세요.
 
-[작성 진행 맥락]
-- 이전 단계에서 학생이 직접 적은 내용: ${JSON.stringify(drafts || {})}
+[작성 맥락]
+- 이전까지 작성된 내용: ${JSON.stringify(drafts || {})}
 - 현재 작성 단계: Step ${step} (${stepDescription || ''})
-- 학생이 이번에 입력한 문장: "${text}"
+- 학생 제출 문장: "${text}"
 
-[1단계: 의도(Intent) 파악]
-- "help": 영작을 못 하겠어서 힌트나 단어, 철자, 작성 방법을 묻는 경우
-- "submission": 과제를 위해 실제 영어 문장을 완성하여 제출한 경우 (문장에 'help' 동사가 쓰였더라도 영작문이면 submission)
+[1단계: 의도(intent) 파악]
+- "help": 힌트, 단어, 철자, 작성 방법을 묻거나 조언을 요청하는 경우
+- "submission": 영어 문장을 실제로 작성하여 제출한 경우 ('help' 단어가 영작문에 쓰였어도 submission으로 분류)
 
 [2단계: 평가 및 피드백 규칙]
-1. Intent가 "help"인 경우:
+1. intent가 "help"인 경우:
    - passed: false, issueType: "도움말 안내"
-   - 한국어로 친절한 문장 구조 안내 및 힌트 제공
-   - suggestedHints는 반드시 빈칸(______ ) 패턴으로 2개 제공
+   - 한국어로 친절한 문장 구조 팁 및 조언 제공
+   - suggestedHints는 반드시 '______' 빈칸이 포함된 패턴 2개 제공
 
-2. Intent가 "submission"인 경우:
+2. intent가 "submission"인 경우:
    - 합격(passed: true) 기준:
-     1) 현재 단계(Step ${step})의 지시 사항에 부합하는 내용인가?
-     2) 앞 단계(Step 1~${step-1})에서 학생이 스스로 정립한 등장인물, 설정, 사건 흐름과 논리적·내용적 일관성을 유지하는가? (모순이나 뜬금없는 전개 차단)
-     3) 철자(Spelling) 및 문법(Grammar)이 올바르고 최소 7단어 이상의 완결된 문장인가?
+     1) Step ${step}의 지시 사항에 부합하는 내용인가?
+     2) 앞 단계들의 맥락(등장인물, 배경 등)과 모순 없이 자연스럽게 이어지는가?
+     3) 철자 및 문법이 올바르고 최소 7단어 이상의 완결된 문장인가?
    - 주의사항:
-     * '목적의 to부정사', '재귀대명사', '추천요소(비교, 주제, 삽화, 감동)'는 전체 8문장 중 어디서든 쓰면 되므로, 이번 문장에 없다고 탈락(passed: false)시키지 마세요.
-     * 이번 문장에 실제 쓰였는지만 감지하여 detectedGrammar와 detectedCriteria에 true/false로 기록하세요.
-     * 탈락 시에는 학생이 창작한 이야기 맥락에 맞춰 어디가 어색한지, 철자/문법 오류는 무엇인지 구체적인 수정 이유와 올바른 표현을 안내하세요.
+     * 목적의 to부정사, 재귀대명사, 추천요소는 8문장 중 어디서든 쓰면 되므로 이번 문장에 없다고 탈락시키지 마세요.
+     * 이번 문장에 실제 쓰였는지 여부만 detectedGrammar와 detectedCriteria에 true/false로 표시하세요.
+   - 피드백 작성 규칙 (매우 중요):
+     * **합격(passed: true) 시:** 학생 문장에 대한 구체적 칭찬을 작성한 후, 문단 아래에 반드시 다음과 같이 다음 단계 안내와 질문을 포함해야 합니다:
+       ${nextStep <= 8 ? `
+       형식 예시:
+       칭찬 내용 한두 문장.
+       
+       ---
+       ### [Step ${nextStep}] 다음 단계 제목
+       ${stepQuestions[nextStep] || ''}
+       ` : `축하 메시지와 함께 우측의 [View Final Report] 버튼을 눌러 최종 결과를 확인하라는 안내 문구.`}
+     * **불합격(passed: false) 시:** 무엇이 어색하거나 틀렸는지 친절히 설명하고, 학생 창작 이야기 맥락에 맞춘 수정 방향을 알려주세요. (다음 단계 질문 포함 금지)
 
-[3단계: 힌트 생성 절대 규칙 (중요)]
-- suggestedHints에는 절대로 학생이 그대로 베껴 쓸 수 있는 완성형 문장 전체를 주지 마세요.
-- 학생이 핵심 단어나 표현을 직접 채워 넣을 수 있도록 **반드시 '______' (언더바 빈칸)**을 포함한 문장 뼈대 패턴 형태로만 2개를 제공하세요.
-  * 잘못된 힌트 예시: "I truly recommend this heart-warming story to everyone."
-  * 올바른 힌트 예시: "I truly recommend this ______ story to ______."
-  * 올바른 힌트 예시: "This book is a must-read for anyone who wants to ______."
+[3단계: 힌트 작성 규칙]
+- suggestedHints에는 완성된 문장을 주지 마시고, 학생이 단어를 채워 넣을 수 있도록 **반드시 '______' 빈칸이 포함된 문장 패턴 2개**를 제공하세요.
 
 반드시 마크다운 기호 없이 순수한 JSON 포맷으로만 응답하세요:
 {
   "intent": "submission" 또는 "help",
   "passed": true 또는 false,
-  "issueType": "오류 유형 (탈락 시: 철자 오류, 어법 오류, 단계 불일치, 전개 모순 등)",
-  "feedback": "친절한 한국어 피드백 (칭찬, 오류 수정 가이드 등)",
+  "issueType": "오류 유형 (탈락 시 기재)",
+  "feedback": "한국어 피드백 (합격 시 다음 단계 질문 반드시 포함)",
   "detectedGrammar": {
     "hasToInfinitive": false,
     "hasReflexive": false
@@ -68,7 +87,7 @@ export default async function handler(req, res) {
     "art": false,
     "emotion": false
   },
-  "suggestedHints": ["반드시 ______ 빈칸이 포함된 패턴 힌트 1", "반드시 ______ 빈칸이 포함된 패턴 힌트 2"]
+  "suggestedHints": ["반드시 ______ 빈칸이 포함된 패턴 1", "반드시 ______ 빈칸이 포함된 패턴 2"]
 }
 `;
 
